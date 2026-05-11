@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Felipe Barroso | Ferramentas de RH Estratégico</title>
+  <meta name="description" content="Materiais gratuitos para transformar seu RH em um pilar estratégico com foco em ROI e Capital Humano." />
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'azul-profundo':  '#1F4E79',
+            'azul-medio':     '#2E6FA8',
+            'terracota':      '#D97A4A',
+            'terracota-light':'#F0A07A',
+            'verde-acao':     '#3DA57A',
+            'verde-hover':    '#2E8A63',
+            'cinza-fundo':    '#F4F5F7',
+            'cinza-card':     '#FFFFFF',
+            'cinza-borda':    '#E2E5EA',
+            'grafite':        '#333333',
+            'grafite-light':  '#6B7280',
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          boxShadow: {
+            'card':       '0 2px 12px rgba(31, 78, 121, 0.07)',
+            'card-hover': '0 8px 28px rgba(31, 78, 121, 0.16)',
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease-out forwards',
+          },
+          keyframes: {
+            fadeUp: {
+              '0%':   { opacity: '0', transform: 'translateY(16px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Reset & Base */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #F4F5F7;
+      color: #333333;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Animação escalonada nos cards */
+    .card-animate { opacity: 0; }
+    .card-animate.visible {
+      animation: fadeUp 0.5s ease-out forwards;
+    }
+    .card-animate:nth-child(1) { animation-delay: 0.05s; }
+    .card-animate:nth-child(2) { animation-delay: 0.10s; }
+    .card-animate:nth-child(3) { animation-delay: 0.15s; }
+    .card-animate:nth-child(4) { animation-delay: 0.20s; }
+    .card-animate:nth-child(5) { animation-delay: 0.25s; }
+    .card-animate:nth-child(6) { animation-delay: 0.30s; }
+
+    /* Linha decorativa no hero */
+    .hero-accent {
+      width: 48px;
+      height: 4px;
+      background: linear-gradient(90deg, #D97A4A, #F0A07A);
+      border-radius: 2px;
+    }
+
+    /* Tag de categoria no card */
+    .tag {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+
+    /* Scroll suave */
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- ═══════════════════════════════════════
+       HEADER
+  ═══════════════════════════════════════ -->
+  <header class="bg-white border-b border-cinza-borda sticky top-0 z-50">
+    <div class="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+
+      <!-- Logo / Nome -->
+      <div class="flex items-center gap-3">
+        <!-- Avatar placeholder — substitua pelo src da sua foto -->
+        <div class="w-9 h-9 rounded-full bg-azul-profundo flex items-center justify-center flex-shrink-0">
+          <span class="text-white text-sm font-semibold">FB</span>
+        </div>
+        <div>
+          <p class="text-grafite font-semibold text-sm leading-tight">Felipe Barroso</p>
+          <p class="text-grafite-light text-xs leading-tight">Consultor | RH Estratégico</p>
+        </div>
+      </div>
+
+      <!-- CTA de Contato -->
+      <a
+        href="https://wa.me/5592992002572?text=Olá%20Felipe,%20vim%20pela%20sua%20página%20de%20materiais!"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-azul-profundo border border-azul-profundo text-xs font-medium px-4 py-2 rounded-full
+               hover:bg-azul-profundo hover:text-white transition-all duration-200"
+      >
+        Fale Comigo
+      </a>
+
+    </div>
+  </header>
+
+
+  <!-- ═══════════════════════════════════════
+       HERO SECTION
+  ═══════════════════════════════════════ -->
+  <section class="max-w-4xl mx-auto px-6 pt-14 pb-12 text-center">
+
+    <!-- Badge -->
+    <span class="inline-block bg-terracota/10 text-terracota text-xs font-semibold
+                 tracking-widest uppercase px-4 py-1.5 rounded-full mb-6">
+      Materiais Gratuitos
+    </span>
+
+    <!-- Título -->
+    <h1 class="text-3xl sm:text-4xl font-bold text-azul-profundo leading-tight mb-4 max-w-2xl mx-auto">
+      Ferramentas para transformar seu RH em um pilar estratégico
+    </h1>
+
+    <!-- Linha decorativa centralizada -->
+    <div class="hero-accent mx-auto mb-5"></div>
+
+    <!-- Subtítulo -->
+    <p class="text-grafite-light text-base sm:text-lg max-w-xl mx-auto leading-relaxed">
+      PDFs, planilhas e mapas mentais focados em
+      <strong class="text-grafite font-medium">ROI, Capital Humano e Liderança</strong>.
+      Tudo que você precisa para seu RH deixar de ser custo e virar resultado.
+    </p>
+
+    <!-- Indicador de quantidade -->
+    <div class="flex items-center justify-center gap-6 mt-8">
+      <div class="text-center">
+        <p class="text-azul-profundo text-xl font-bold">3</p>
+        <p class="text-grafite-light text-xs">Materiais</p>
+      </div>
+      <div class="w-px h-8 bg-cinza-borda"></div>
+      <div class="text-center">
+        <p class="text-azul-profundo text-xl font-bold">100%</p>
+        <p class="text-grafite-light text-xs">Gratuito</p>
+      </div>
+      <div class="w-px h-8 bg-cinza-borda"></div>
+      <div class="text-center">
+        <p class="text-azul-profundo text-xl font-bold">Prático</p>
+        <p class="text-grafite-light text-xs">Aplique já</p>
+      </div>
+    </div>
+
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       GRID DE RECURSOS
+  ═══════════════════════════════════════ -->
+  <main class="max-w-4xl mx-auto px-6 pb-16">
+
+    <div id="cards-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+
+      <!-- ── CARD 1 ── -->
+      <article class="card-animate bg-cinza-card rounded-2xl border border-cinza-borda p-6
+                      shadow-card hover:shadow-card-hover hover:-translate-y-1
+                      transition-all duration-300 flex flex-col gap-4">
+
+        <!-- Ícone + Tag -->
+        <div class="flex items-start justify-between">
+          <div class="w-11 h-11 bg-azul-profundo/10 rounded-xl flex items-center justify-center">
+            <!-- Ícone Planilha -->
+            <svg class="w-5 h-5 text-azul-profundo" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/>
+            </svg>
+          </div>
+          <span class="tag bg-azul-profundo/10 text-azul-profundo">Planilha</span>
+        </div>
+
+        <!-- Conteúdo -->
+        <div class="flex-1">
+          <h2 class="text-grafite font-semibold text-base leading-snug mb-1">
+            Planilha de Custo Real do Turnover
+          </h2>
+          <p class="text-grafite-light text-sm leading-relaxed">
+            Calcule o impacto financeiro real da rotatividade e apresente dados concretos à diretoria.
+          </p>
+        </div>
+
+        <!-- Botão -->
+        <a href="COLE_AQUI_O_LINK_DO_ARQUIVO_1"
+           target="_blank" rel="noopener noreferrer"
+           class="w-full bg-verde-acao hover:bg-verde-hover text-white text-sm font-semibold
+                  py-2.5 rounded-xl text-center transition-colors duration-200 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Baixar Agora
+        </a>
+      </article>
+
+
+      <!-- ── CARD 2 ── -->
+      <article class="card-animate bg-cinza-card rounded-2xl border border-cinza-borda p-6
+                      shadow-card hover:shadow-card-hover hover:-translate-y-1
+                      transition-all duration-300 flex flex-col gap-4">
+        <div class="flex items-start justify-between">
+          <div class="w-11 h-11 bg-terracota/10 rounded-xl flex items-center justify-center">
+            <!-- Ícone PDF / Documento -->
+            <svg class="w-5 h-5 text-terracota" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586
+                   a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+          </div>
+          <span class="tag bg-terracota/10 text-terracota">PDF</span>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-grafite font-semibold text-base leading-snug mb-1">
+            Guia: RH como Centro de Lucro
+          </h2>
+          <p class="text-grafite-light text-sm leading-relaxed">
+            Framework completo para posicionar o RH como área estratégica e elevar o EBITDA da empresa.
+          </p>
+        </div>
+        <a href="COLE_AQUI_O_LINK_DO_ARQUIVO_2"
+           target="_blank" rel="noopener noreferrer"
+           class="w-full bg-verde-acao hover:bg-verde-hover text-white text-sm font-semibold
+                  py-2.5 rounded-xl text-center transition-colors duration-200 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Baixar Agora
+        </a>
+      </article>
+
+
+      <!-- ── CARD 3 ── -->
+      <article class="card-animate bg-cinza-card rounded-2xl border border-cinza-borda p-6
+                      shadow-card hover:shadow-card-hover hover:-translate-y-1
+                      transition-all duration-300 flex flex-col gap-4">
+        <div class="flex items-start justify-between">
+          <div class="w-11 h-11 bg-verde-acao/10 rounded-xl flex items-center justify-center">
+            <!-- Ícone Mapa Mental -->
+            <svg class="w-5 h-5 text-verde-acao" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+          </div>
+          <span class="tag bg-verde-acao/10 text-verde-acao">Mapa Mental</span>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-grafite font-semibold text-base leading-snug mb-1">
+            Mapa: Diagnóstico de Clima Organizacional
+          </h2>
+          <p class="text-grafite-light text-sm leading-relaxed">
+            Visualize os pilares de engajamento e identifique gargalos antes que virem problema de negócio.
+          </p>
+        </div>
+        <a href="COLE_AQUI_O_LINK_DO_ARQUIVO_3"
+           target="_blank" rel="noopener noreferrer"
+           class="w-full bg-verde-acao hover:bg-verde-hover text-white text-sm font-semibond
+                  py-2.5 rounded-xl text-center transition-colors duration-200 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Baixar Agora
+        </a>
+      </article>
+
+
+      <!-- ── CARD 4 ── -->
+      <article class="card-animate bg-cinza-card rounded-2xl border border-cinza-borda p-6
+                      shadow-card hover:shadow-card-hover hover:-translate-y-1
+                      transition-all duration-300 flex flex-col gap-4">
+        <div class="flex items-start justify-between">
+          <div class="w-11 h-11 bg-azul-profundo/10 rounded-xl flex items-center justify-center">
+            <!-- Ícone KPI / Gráfico -->
+            <svg class="w-5 h-5 text-azul-profundo" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0
+                   0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0
+                   0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+            </svg>
+          </div>
+          <span class="tag bg-azul-profundo/10 text-azul-profundo">Planilha</span>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-grafite font-semibold text-base leading-snug mb-1">
+            Dashboard de KPIs de RH
+          </h2>
+          <p class="text-grafite-light text-sm leading-relaxed">
+            Painel completo com os principais indicadores de RH prontos para apresentar ao board executivo.
+          </p>
+        </div>
+        <a href="COLE_AQUI_O_LINK_DO_ARQUIVO_4"
+           target="_blank" rel="noopener noreferrer"
+           class="w-full bg-verde-acao hover:bg-verde-hover text-white text-sm font-semibold
+                  py-2.5 rounded-xl text-center transition-colors duration-200 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Baixar Agora
+        </a>
+      </article>
+
+
+      <!-- ── CARD 5 ── -->
+      <article class="card-animate bg-cinza-card rounded-2xl border border-cinza-borda p-6
+                      shadow-card hover:shadow-card-hover hover:-translate-y-1
+                      transition-all duration-300 flex flex-col gap-4">
+        <div class="flex items-start justify-between">
+          <div class="w-11 h-11 bg-terracota/10 rounded-xl flex items-center justify-center">
+            <!-- Ícone Pessoas / Team -->
+            <svg class="w-5 h-5 text-terracota" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857
+                   M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857
+                   m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2
+                   0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+          </div>
+          <span class="tag bg-terracota/10 text-terracota">PDF</span>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-grafite font-semibold text-base leading-snug mb-1">
+            Guia de Onboarding Estratégico
+          </h2>
+          <p class="text-grafite-light text-sm leading-relaxed">
+            Estruture a integração de novos colaboradores para reduzir o tempo de ramp-up e elevar a retenção.
+          </p>
+        </div>
+        <a href="COLE_AQUI_O_LINK_DO_ARQUIVO_5"
+           target="_blank" rel="noopener noreferrer"
+           class="w-full bg-verde-acao hover:bg-verde-hover text-white text-sm font-semibold
+                  py-2.5 rounded-xl text-center transition-colors duration-200 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Baixar Agora
+        </a>
+      </article>
+
+
+      <!-- ── CARD 6 ── -->
+      <article class="card-animate bg-cinza-card rounded-2xl border border-cinza-borda p-6
+                      shadow-card hover:shadow-card-hover hover:-translate-y-1
+                      transition-all duration-300 flex flex-col gap-4">
+        <div class="flex items-start justify-between">
+          <div class="w-11 h-11 bg-verde-acao/10 rounded-xl flex items-center justify-center">
+            <!-- Ícone Mapa / Estratégia -->
+            <svg class="w-5 h-5 text-verde-acao" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6
+                   3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+            </svg>
+          </div>
+          <span class="tag bg-verde-acao/10 text-verde-acao">Mapa Mental</span>
+        </div>
+        <div class="flex-1">
+          <h2 class="text-grafite font-semibold text-base leading-snug mb-1">
+            Mapa: Planejamento Estratégico de RH
+          </h2>
+          <p class="text-grafite-light text-sm leading-relaxed">
+            Da análise de headcount ao plano de desenvolvimento — tudo em um mapa visual e executável.
+          </p>
+        </div>
+        <a href="COLE_AQUI_O_LINK_DO_ARQUIVO_6"
+           target="_blank" rel="noopener noreferrer"
+           class="w-full bg-verde-acao hover:bg-verde-hover text-white text-sm font-semibold
+                  py-2.5 rounded-xl text-center transition-colors duration-200 flex items-center justify-center gap-2">
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+          </svg>
+          Baixar Agora
+        </a>
+      </article>
+
+
+    </div><!-- /grid -->
+  </main>
+  <!-- ═══════════════════════════════════════
+       BANNER CTA — CONSULTORIA
+  ═══════════════════════════════════════ -->
+  <section class="max-w-4xl mx-auto px-6 pb-16">
+    <div class="bg-azul-profundo rounded-2xl p-8 sm:p-10 flex flex-col sm:flex-row
+                items-center justify-between gap-6">
+
+      <!-- Texto -->
+      <div class="text-center sm:text-left">
+        <p class="text-terracota-light text-xs font-semibold tracking-widest uppercase mb-2">
+          Precisa de algo além dos materiais?
+        </p>
+        <h3 class="text-white text-xl sm:text-2xl font-bold leading-snug max-w-sm">
+          Diagnóstico de RH gratuito para sua empresa
+        </h3>
+        <p class="text-white/70 text-sm mt-2 max-w-sm">
+          30 minutos. Sem compromisso. Com um plano de ação concreto no final.
+        </p>
+      </div>
+
+      <!-- Botão -->
+      <a href="diagnostico.html"
+         target="_blank" rel="noopener noreferrer"
+         class="flex-shrink-0 bg-terracota hover:bg-terracota-light text-white font-semibold
+                text-sm px-7 py-3.5 rounded-xl transition-colors duration-200 whitespace-nowrap">
+        Quero o Diagnóstico →
+      </a>
+
+    </div>
+  </section>
+
+
+  <!-- ═══════════════════════════════════════
+       FOOTER
+  ═══════════════════════════════════════ -->
+  <footer class="border-t border-cinza-borda bg-white mt-auto">
+    <div class="max-w-4xl mx-auto px-6 py-8 flex flex-col sm:flex-row
+                items-center justify-between gap-4">
+
+      <!-- Copyright -->
+      <p class="text-grafite-light text-xs text-center sm:text-left">
+        © 2026 Felipe Barroso · Todos os direitos reservados
+      </p>
+
+      <!-- Links Sociais -->
+      <div class="flex items-center gap-5">
+
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/felipeasouzab/"
+           target="_blank" rel="noopener noreferrer"
+           class="text-grafite-light hover:text-azul-profundo transition-colors duration-200"
+           aria-label="LinkedIn">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037
+                     -1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046
+                     c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286z
+                     M5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065z
+                     m1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0
+                     1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24
+                     22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+          </svg>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/felipeasouzab/"
+           target="_blank" rel="noopener noreferrer"
+           class="text-grafite-light hover:text-terracota transition-colors duration-200"
+           aria-label="Instagram">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691
+                     4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069
+                     4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07
+                     -3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058
+                     -1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227
+                     1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069z
+                     M12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052
+                     .014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358
+                     2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0
+                     3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059
+                     -1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947
+                     -.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0z
+                     m0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324z
+                     M12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0
+                     100 2.881 1.44 1.44 0 000-2.881z"/>
+          </svg>
+        </a>
+
+        <!-- WhatsApp -->
+        <a href="https://wa.me/5592992002572"
+           target="_blank" rel="noopener noreferrer"
+           class="text-grafite-light hover:text-verde-acao transition-colors duration-200"
+           aria-label="WhatsApp">
+          <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099
+                     -.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223
+                     -.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761
+                     -1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446
+                     -.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52
+                     -.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51
+                     a12.8 12.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297
+                     -1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198
+                     2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227
+                     1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248
+                     -1.289.173-1.413-.074-.124-.272-.198-.57-.347z
+                     M12 0C5.373 0 0 5.373 0 12c0 2.117.554 4.103 1.523 5.828L0
+                     24l6.335-1.508A11.933 11.933 0 0012 24c6.627 0 12-5.373 12-12
+                     S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-4.932-1.33l-.355-.211
+                     -3.658.871.936-3.543-.232-.367A9.818 9.818 0 1112 21.818z"/>
+          </svg>
+        </a>
+
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ═══════════════════════════════════════
+       SCRIPT — Animação por IntersectionObserver
+  ═══════════════════════════════════════ -->
+  <script>
+    // Ativa animação dos cards quando entram na viewport
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.card-animate').forEach(card => {
+      observer.observe(card);
+    });
+  </script>
+
+</body>
+</html>
