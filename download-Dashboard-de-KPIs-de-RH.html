@@ -818,18 +818,18 @@
       // Substitua YOUR_FORM_ID pelo ID do seu Formspree
       fetch('https://script.google.com/macros/s/AKfycbxJoSYYeVV1DG-HCWQ_pdKeWJ1TfPeynBperk51nXouFKE1196ELMhuCmW9wiKRH2g-mw/exec', {
   method: 'POST',
+  mode: 'no-cors',
   headers: {
     'Content-Type': 'text/plain'
   },
   body: JSON.stringify(data)
 })
-.then(function(response) { return response.json(); })
-.then(function(result) {
-  console.log('Lead salvo:', result);
+.then(function() {
+  console.log('Enviado para o Google Sheets.');
   liberarDownload(data);
 })
 .catch(function(err) {
-  console.log('Erro no envio:', err);
+  console.log('Erro:', err);
   liberarDownload(data);
 });
 

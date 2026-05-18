@@ -849,16 +849,21 @@
 
       // Envia para Formspree — substitua YOUR_FORM_ID
       fetch('https://script.google.com/macros/s/AKfycbxJoSYYeVV1DG-HCWQ_pdKeWJ1TfPeynBperk51nXouFKE1196ELMhuCmW9wiKRH2g-mw/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(function() { liberarDownload(data); })
-      .catch(function() { liberarDownload(data); });
-    }
+  method: 'POST',
+  mode: 'no-cors',
+  headers: {
+    'Content-Type': 'text/plain'
+  },
+  body: JSON.stringify(data)
+})
+.then(function() {
+  console.log('Enviado para o Google Sheets.');
+  liberarDownload(data);
+})
+.catch(function(err) {
+  console.log('Erro:', err);
+  liberarDownload(data);
+});
 
     // ── Libera download e abre modal ──
     function liberarDownload(data) {
