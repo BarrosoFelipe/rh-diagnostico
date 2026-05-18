@@ -1042,44 +1042,37 @@
 
     // ── Envio do formulário ──
     function submitForm() {
-      if (!validateStep(4)) {
-        scrollToFirstError();
-        return;
-      }
+  if (!validateStep(4)) {
+    scrollToFirstError();
+    return;
+  }
 
-      var btn = document.getElementById('btn-submit');
-      btn.disabled = true;
-      btn.innerHTML = [
-        '<svg class="w-5 h-5 spinner" fill="none" viewBox="0 0 24 24"',
-        ' stroke="currentColor" stroke-width="2">',
-        '<path stroke-linecap="round" stroke-linejoin="round"',
-        ' d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9',
-        'm11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>',
-        '</svg> Enviando...'
-      ].join('');
+  var btn = document.getElementById('btn-submit');
+  btn.disabled = true;
+  btn.innerHTML = [
+    '<svg class="w-5 h-5 spinner" fill="none" viewBox="0 0 24 24"',
+    ' stroke="currentColor" stroke-width="2">',
+    '<path stroke-linecap="round" stroke-linejoin="round"',
+    ' d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9',
+    'm11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>',
+    '</svg> Enviando...'
+  ].join('');
 
-      var data = collectData();
+  var data = collectData();
 
-      // ── Troque YOUR_FORM_ID pelo ID do Formspree ──
-      fetch('https://script.google.com/macros/s/AKfycbxJoSYYeVV1DG-HCWQ_pdKeWJ1TfPeynBperk51nXouFKE1196ELMhuCmW9wiKRH2g-mw/exec', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'text/plain',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
-      .then(function(res) {
-        if (res.ok) {
-          showSuccess(data);
-        } else {
-          fallbackSave(data);
-        }
-      })
-      .catch(function() {
-        fallbackSave(data);
-      });
-    }
+  fetch('https://script.google.com/macros/s/AKfycbzoyr1cb3uIUxvUF8oAl_h2YLzaPT8VLg-2OnSJqJb2Gw2A4w1O-O_R0_BBsLzxL_nqPA/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data)
+  })
+  .then(function() {
+    showSuccess(data);
+  })
+  .catch(function() {
+    fallbackSave(data);
+  });
+}
 
     // ── Fallback: salva localmente se endpoint não configurado ──
     function fallbackSave(data) {
