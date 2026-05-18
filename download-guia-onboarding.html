@@ -769,182 +769,195 @@
   <script>
     var consent = false;
 
-    document.addEventListener('DOMContentLoaded', function() {
-      initPhoneMask();
-      animateRatingBar();
-    });
-
-    function initPhoneMask() {
-      var el = document.getElementById('whats');
-      if (!el) return;
-      el.addEventListener('input', function() {
-        var v = this.value.replace(/\D/g,'').substring(0,11);
-        if (v.length > 6) {
-          v = '('+v.substring(0,2)+') '+v.substring(2,7)+'-'+v.substring(7);
-        } else if (v.length > 2) {
-          v = '('+v.substring(0,2)+') '+v.substring(2);
-        } else if (v.length > 0) {
-          v = '('+v;
-        }
-        this.value = v;
-      });
-    }
-
-    function toggleConsent() {
-      consent = !consent;
-      var box   = document.getElementById('cbox');
-      var check = document.getElementById('ccheck');
-      if (consent) {
-        box.style.background  = '#1F4E79';
-        box.style.borderColor = '#1F4E79';
-        check.classList.remove('hidden');
-      } else {
-        box.style.background  = '';
-        box.style.borderColor = '#E2E5EA';
-        check.classList.add('hidden');
-      }
-      hideErr('e-consent');
-    }
-
-    function showErr(id) {
-      var el = document.getElementById(id);
-      if (el) el.classList.add('show');
-    }
-    function hideErr(id) {
-      var el = document.getElementById(id);
-      if (el) el.classList.remove('show');
-    }
-    function clearErrs() {
-      document.querySelectorAll('.emsg.show').forEach(function(e) {
-        e.classList.remove('show');
-      });
-      document.querySelectorAll('.fi.err').forEach(function(e) {
-        e.classList.remove('err');
-      });
-    }
-
-    function isEmail(v) {
-      var p = v.split('@');
-      if (p.length !== 2 || p[0].length === 0) return false;
-      var d = p[1].split('.');
-      return d.length >= 2 && d[d.length-1].length >= 2;
-    }
-
-    function validateForm() {
-      clearErrs();
-      var ok    = true;
-      var nome  = document.getElementById('nome');
-      var email = document.getElementById('email');
-      var whats = document.getElementById('whats');
-      var cargo = document.getElementById('cargo');
-      var porte = document.getElementById('porte');
-
-      if (!nome || nome.value.trim().length < 3) {
-        showErr('e-nome'); if (nome) nome.classList.add('err'); ok = false;
-      }
-      if (!email || !isEmail(email.value.trim())) {
-        showErr('e-email'); if (email) email.classList.add('err'); ok = false;
-      }
-      if (!whats || whats.value.replace(/\D/g,'').length < 10) {
-        showErr('e-whats'); if (whats) whats.classList.add('err'); ok = false;
-      }
-      if (!cargo || cargo.value === '') {
-        showErr('e-cargo'); if (cargo) cargo.classList.add('err'); ok = false;
-      }
-      if (!porte || porte.value === '') {
-        showErr('e-porte'); if (porte) porte.classList.add('err'); ok = false;
-      }
-      if (!consent) {
-        showErr('e-consent'); ok = false;
-      }
-      return ok;
-    }
-
-    function submitLead() {
-      if (!validateForm()) {
-        var first = document.querySelector('.emsg.show');
-        if (first) first.scrollIntoView({ behavior:'smooth', block:'center' });
-        return;
-      }
-
-      var btn = document.getElementById('btn-download');
-      btn.disabled = true;
-      btn.innerHTML =
-        '<svg class="w-5 h-5 spinner" fill="none" viewBox="0 0 24 24"' +
-        ' stroke="currentColor" stroke-width="2">' +
-        '<path stroke-linecap="round" stroke-linejoin="round"' +
-        ' d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9' +
-        'm11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>' +
-        '</svg> Liberando acesso...';
-
-      var data = {
-        nome:      document.getElementById('nome').value.trim(),
-        email:     document.getElementById('email').value.trim(),
-        whatsapp:  document.getElementById('whats').value.trim(),
-        cargo:     document.getElementById('cargo').value,
-        porte:     document.getElementById('porte').value,
-        material:  'Guia de Onboarding Estratégico',
-        timestamp: new Date().toISOString(),
-        origem:    document.referrer || 'direto'
-      };
-
-      try {
-        var leads = JSON.parse(localStorage.getItem('leads_fb') || '[]');
-        leads.push(data);
-        localStorage.setItem('leads_fb', JSON.stringify(leads));
-      } catch(e) {}
-
-      // Substitua YOUR_FORM_ID pelo ID do seu Formspree
-      fetch('https://script.google.com/macros/s/AKfycbxJoSYYeVV1DG-HCWQ_pdKeWJ1TfPeynBperk51nXouFKE1196ELMhuCmW9wiKRH2g-mw/exec', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'text/plain'
-  },
-  body: JSON.stringify(data)
-})
-.then(function(response) { return response.json(); })
-.then(function(result) {
-  console.log('Lead salvo:', result);
-  liberarDownload(data);
-})
-.catch(function(err) {
-  console.log('Erro no envio:', err);
-  liberarDownload(data);
+document.addEventListener('DOMContentLoaded', function() {
+  initPhoneMask();
+  animateRatingBar();
 });
 
-    function liberarDownload(data) {
-      document.getElementById('suc-nome').textContent  = data.nome.split(' ')[0];
-      document.getElementById('suc-email').textContent = data.email;
-
-      document.getElementById('modal-success').classList.add('show');
-
-      setTimeout(function() {
-        var link = document.createElement('a');
-        link.href     = 'Guia-Onboarding-Estrategico.pdf';
-        link.download = 'Guia-Onboarding-Estrategico.pdf';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }, 1000);
-
-      var sec = 10;
-      var timer = setInterval(function() {
-        sec--;
-        var el = document.getElementById('close-sec');
-        if (el) el.textContent = sec;
-        if (sec <= 0) {
-          clearInterval(timer);
-          document.getElementById('modal-success').classList.remove('show');
-        }
-      }, 1000);
+function initPhoneMask() {
+  var el = document.getElementById('whats');
+  if (!el) return;
+  el.addEventListener('input', function() {
+    var v = this.value.replace(/\D/g,'').substring(0,11);
+    if (v.length > 6) {
+      v = '('+v.substring(0,2)+') '+v.substring(2,7)+'-'+v.substring(7);
+    } else if (v.length > 2) {
+      v = '('+v.substring(0,2)+') '+v.substring(2);
+    } else if (v.length > 0) {
+      v = '('+v;
     }
+    this.value = v;
+  });
+}
 
-    function animateRatingBar() {
-      setTimeout(function() {
-        var bar = document.getElementById('rating-bar');
-        if (bar) bar.style.width = '98%';
-      }, 600);
+function toggleConsent() {
+  consent = !consent;
+  var box   = document.getElementById('cbox');
+  var check = document.getElementById('ccheck');
+  if (consent) {
+    box.style.background  = '#1F4E79';
+    box.style.borderColor = '#1F4E79';
+    check.classList.remove('hidden');
+  } else {
+    box.style.background  = '';
+    box.style.borderColor = '#E2E5EA';
+    check.classList.add('hidden');
+  }
+  hideErr('e-consent');
+}
+
+function showErr(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('show');
+}
+
+function hideErr(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('show');
+}
+
+function clearErrs() {
+  document.querySelectorAll('.emsg.show').forEach(function(e) {
+    e.classList.remove('show');
+  });
+  document.querySelectorAll('.fi.err').forEach(function(e) {
+    e.classList.remove('err');
+  });
+}
+
+function isEmail(v) {
+  var p = v.split('@');
+  if (p.length !== 2 || p[0].length === 0) return false;
+  var d = p[1].split('.');
+  return d.length >= 2 && d[d.length-1].length >= 2;
+}
+
+function validateForm() {
+  clearErrs();
+  var ok    = true;
+  var nome  = document.getElementById('nome');
+  var email = document.getElementById('email');
+  var whats = document.getElementById('whats');
+  var cargo = document.getElementById('cargo');
+  var porte = document.getElementById('porte');
+
+  if (!nome || nome.value.trim().length < 3) {
+    showErr('e-nome');
+    if (nome) nome.classList.add('err');
+    ok = false;
+  }
+  if (!email || !isEmail(email.value.trim())) {
+    showErr('e-email');
+    if (email) email.classList.add('err');
+    ok = false;
+  }
+  if (!whats || whats.value.replace(/\D/g,'').length < 10) {
+    showErr('e-whats');
+    if (whats) whats.classList.add('err');
+    ok = false;
+  }
+  if (!cargo || cargo.value === '') {
+    showErr('e-cargo');
+    if (cargo) cargo.classList.add('err');
+    ok = false;
+  }
+  if (!porte || porte.value === '') {
+    showErr('e-porte');
+    if (porte) porte.classList.add('err');
+    ok = false;
+  }
+  if (!consent) {
+    showErr('e-consent');
+    ok = false;
+  }
+  return ok;
+}
+
+function submitLead() {
+  if (!validateForm()) {
+    var first = document.querySelector('.emsg.show');
+    if (first) first.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+
+  var btn = document.getElementById('btn-download');
+  btn.disabled = true;
+  btn.innerHTML =
+    '<svg class="w-5 h-5 spinner" fill="none" viewBox="0 0 24 24"' +
+    ' stroke="currentColor" stroke-width="2">' +
+    '<path stroke-linecap="round" stroke-linejoin="round"' +
+    ' d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9' +
+    'm11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>' +
+    '</svg> Liberando acesso...';
+
+  var data = {
+    nome:      document.getElementById('nome').value.trim(),
+    email:     document.getElementById('email').value.trim(),
+    whatsapp:  document.getElementById('whats').value.trim(),
+    cargo:     document.getElementById('cargo').value,
+    porte:     document.getElementById('porte').value,
+    material:  'Guia de Onboarding Estratégico',
+    timestamp: new Date().toISOString(),
+    origem:    document.referrer || 'direto'
+  };
+
+  try {
+    var leads = JSON.parse(localStorage.getItem('leads_fb') || '[]');
+    leads.push(data);
+    localStorage.setItem('leads_fb', JSON.stringify(leads));
+  } catch(e) {}
+
+  fetch('https://script.google.com/macros/s/AKfycbxJoSYYeVV1DG-HCWQ_pdKeWJ1TfPeynBperk51nXouFKE1196ELMhuCmW9wiKRH2g-mw/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'text/plain'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(function() {
+    console.log('Enviado para o Google Sheets.');
+    liberarDownload(data);
+  })
+  .catch(function(err) {
+    console.log('Erro:', err);
+    liberarDownload(data);
+  });
+}
+
+function liberarDownload(data) {
+  document.getElementById('suc-nome').textContent  = data.nome.split(' ')[0];
+  document.getElementById('suc-email').textContent = data.email;
+
+  document.getElementById('modal-success').classList.add('show');
+
+  setTimeout(function() {
+    var link = document.createElement('a');
+    link.href     = 'Guia-Onboarding-Estrategico.pdf';
+    link.download = 'Guia-Onboarding-Estrategico.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, 1000);
+
+  var sec = 10;
+  var timer = setInterval(function() {
+    sec--;
+    var el = document.getElementById('close-sec');
+    if (el) el.textContent = sec;
+    if (sec <= 0) {
+      clearInterval(timer);
+      document.getElementById('modal-success').classList.remove('show');
     }
+  }, 1000);
+}
+
+function animateRatingBar() {
+  setTimeout(function() {
+    var bar = document.getElementById('rating-bar');
+    if (bar) bar.style.width = '98%';
+  }, 600);
+}
   </script>
 </body>
 </html>
