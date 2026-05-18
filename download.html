@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Baixar Material Gratuito | Felipe Barroso</title>
+  <meta name="description" content="Acesse gratuitamente ferramentas de RH Estratégico. Preencha seus dados e receba o material no e-mail." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'azul':     '#1F4E79',
+            'azul-md':  '#2E6FA8',
+            'azul-lt':  '#EBF3FB',
+            'terra':    '#D97A4A',
+            'terra-lt': '#F0A07A',
+            'verde':    '#3DA57A',
+            'verde-hv': '#2E8A63',
+            'verde-lt': '#E8F7F1',
+            'fundo':    '#F4F5F7',
+            'borda':    '#E2E5EA',
+            'grafite':  '#333333',
+            'cinza':    '#6B7280',
+          },
+          fontFamily: { sans: ['Inter','sans-serif'] },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(180deg, #F4F5F7 0%, #1F4E79 70%, #10243F 100%);
+      color: #333;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+    html { scroll-behavior: smooth; }
+
+    /* ── Inputs ── */
+    .fi {
+      width: 100%;
+      background: #F8F9FB;
+      border: 1.5px solid #E2E5EA;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: .875rem;
+      color: #333;
+      font-family: 'Inter', sans-serif;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      outline: none;
+      appearance: none;
+    }
+    .fi:focus {
+      border-color: #1F4E79;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(31,78,121,.12);
+    }
+    .fi.err { border-color: #DC2626; background: #FEF2F2; }
+    .fi::placeholder { color: #9CA3AF; }
+    select.fi {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 40px;
+      cursor: pointer;
+    }
+
+    /* ── Erros ── */
+    .emsg { display: none; font-size: .73rem; color: #DC2626; margin-top: 4px; align-items: center; gap: 4px; }
+    .emsg.show { display: flex; }
+    .req::after { content: ' *'; color: #DC2626; }
+
+    /* ── Animações ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp .5s ease-out forwards; }
+
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(61,165,122,.4); }
+      50%       { box-shadow: 0 0 0 10px rgba(61,165,122,0); }
+    }
+    .btn-pulse { animation: pulse-glow 2.5s infinite; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin .8s linear infinite; }
+
+    /* ── Progresso social proof ── */
+    .proof-bar {
+      height: 6px;
+      background: #E2E5EA;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .proof-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1F4E79, #3DA57A);
+      border-radius: 3px;
+      transition: width 1.5s ease;
+    }
+
+    /* ── Badge flutuante ── */
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-4px); }
+    }
+    .badge-bounce { animation: bounce 2s ease-in-out infinite; }
+
+    /* ── Tela de sucesso ── */
+    #success-screen { display: none; }
+    #success-screen.show { display: flex; animation: fadeUp .5s ease-out; }
+
+    /* ── Pill de benefício ── */
+    .benefit-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: .8rem;
+      color: rgba(255,255,255,.9);
+    }
+
+    /* ── Contador regressivo ── */
+    #countdown { font-variant-numeric: tabular-nums; }
+  </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+  <!-- ══════════ HEADER ══════════ -->
+  <header class="bg-white border-b border-borda sticky top-0 z-50">
+    <div class="max-w-5xl mx-auto px-5 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-full bg-azul flex items-center justify-center flex-shrink-0">
+          <span class="text-white text-xs font-bold">FB</span>
+        </div>
+        <div>
+          <p class="text-grafite font-semibold text-sm leading-tight">Felipe Barroso</p>
+          <p class="text-cinza text-xs">Consultor | RH Estratégico</p>
+        </div>
+      </div>
+      <!-- Prova social no header -->
+      <div class="hidden sm:flex items-center gap-2 bg-verde-lt border border-verde/20
+                  rounded-full px-4 py-1.5">
+        <div class="w-2 h-2 rounded-full bg-verde animate-pulse"></div>
+        <span class="text-verde text-xs font-semibold">+1.200 downloads realizados</span>
+      </div>
+    </div>
+  </header>
+
+
+  <!-- ══════════ LAYOUT PRINCIPAL (2 colunas no desktop) ══════════ -->
+  <main class="flex-1 max-w-5xl mx-auto w-full px-5 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+
+
+      <!-- ════════ COLUNA ESQUERDA — Apresentação do material ════════ -->
+      <div class="fade-up">
+
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 bg-terra/10 text-terra
+                    text-xs font-semibold tracking-wider uppercase
+                    px-4 py-1.5 rounded-full mb-5">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0
+              00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0
+              00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1
+              1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1
+              1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0
+              00.951-.69l1.07-3.292z"/>
+          </svg>
+          Material Gratuito
+        </div>
+
+        <!-- Título do material (dinâmico via JS) -->
+        <h1 class="text-azul text-2xl sm:text-3xl font-bold leading-tight mb-2" id="page-title">
+          Mapa de Maturidade de RH
+        </h1>
+        <div style="width:48px;height:4px;background:linear-gradient(90deg,#D97A4A,#F0A07A);
+                    border-radius:2px;margin-bottom:20px"></div>
+
+        <p class="text-white text-sm sm:text-base leading-relaxed mb-6" id="page-desc">
+          Descubra em qual estágio de maturidade o RH da sua empresa se encontra
+          e receba um roteiro claro de evolução — do operacional ao estratégico.
+        </p>
+
+        <!-- O que você vai encontrar -->
+        <div class="bg-white rounded-2xl border border-borda p-6 mb-6"
+             style="box-shadow:0 2px 12px rgba(31,78,121,.07)">
+          <p class="text-grafite font-semibold text-sm mb-4 flex items-center gap-2">
+            <svg class="w-4 h-4 text-verde" fill="none" viewBox="0 0 24 24"
+                 stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            O que você vai encontrar neste material:
+             </p>
+             <p>• Planilha Completa para mapear a maturidade de seu RH!</p>
+          <ul class="space-y-3" id="benefits-list">
+            <!-- Preenchido via JS conforme o material -->
+          </ul>
+        </div>
+
+        <!-- Prova social com barra -->
+        <div class="bg-azul-lt rounded-xl p-5 mb-6">
+          <div class="flex items-center justify-between mb-2">
+            <p class="text-azul text-xs font-semibold">Avaliação dos usuários</p>
+            <p class="text-azul text-xs font-bold">4.9 / 5.0</p>
+          </div>
+          <div class="proof-bar mb-3">
+            <div class="proof-fill" id="rating-bar" style="width:0%"></div>
+          </div>
+          <div class="flex items-center gap-1 mb-3">
+            <!-- Estrelas -->
+            <svg class="w-4 h-4 text-terra" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 text-terra" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 text-terra" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 text-terra" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <svg class="w-4 h-4 text-terra" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            <span class="text-cinza text-xs ml-1">de profissionais de RH</span>
+          </div>
+
+          <!-- Depoimento rápido -->
+          <blockquote class="border-l-2 border-azul/30 pl-3">
+            <p class="text-cinza text-xs leading-relaxed italic">
+              "Usei o mapa em uma reunião com a diretoria e mudou completamente
+              a forma como eles veem o RH. Virou ferramenta de gestão."
+            </p>
+            <footer class="text-azul text-xs font-semibold mt-1">
+              — Ana Paula M., Gerente de RH · São Paulo
+            </footer>
+          </blockquote>
+        </div>
+
+        <!-- Quem é Felipe -->
+        <div class="flex items-center gap-4 bg-white rounded-xl border border-borda p-4"
+             style="box-shadow:0 2px 12px rgba(31,78,121,.07)">
+          <div class="w-12 h-12 rounded-full bg-azul flex items-center
+                      justify-center flex-shrink-0 text-white font-bold">FB</div>
+          <div>
+            <p class="text-grafite font-semibold text-sm">Felipe Barroso</p>
+            <p class="text-cinza text-xs leading-relaxed">
+              Gestor de RH Sênior · Especialista em Psicologia Organizacional
+              e Planejamento Empresarial
+            </p>
+          </div>
+        </div>
+
+      </div>
+
+
+      <!-- ════════ COLUNA DIREITA — Formulário ════════ -->
+      <div class="lg:sticky lg:top-24">
+
+        <!-- Card do formulário -->
+        <div class="bg-white rounded-2xl border border-borda overflow-hidden"
+             style="box-shadow:0 4px 24px rgba(31,78,121,.12)">
+
+          <!-- Topo do card -->
+          <div class="bg-azul px-7 py-6">
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <p class="text-terra-lt text-xs font-semibold tracking-widest
+                          uppercase mb-1">Acesso Gratuito</p>
+                <h2 class="text-white text-lg font-bold leading-snug">
+                  Preencha e baixe agora
+                </h2>
+                <p class="text-white/70 text-xs mt-1">
+                  Seus dados ficam seguros. Sem spam.
+                </p>
+              </div>
+              <!-- Ícone do material -->
+              <div class="badge-bounce flex-shrink-0">
+                <div class="w-12 h-12 bg-white/10 rounded-xl flex items-center
+                            justify-center border border-white/20">
+                  <svg class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24"
+                       stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                      d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0
+                         012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0
+                         002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/>
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Benefícios rápidos no topo -->
+            <div class="flex flex-wrap gap-2 mt-4">
+              <div class="benefit-pill">
+                <svg class="w-3.5 h-3.5 text-verde" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                100% gratuito
+              </div>
+              <div class="benefit-pill">
+                <svg class="w-3.5 h-3.5 text-verde" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                Download imediato
+              </div>
+              <div class="benefit-pill">
+                <svg class="w-3.5 h-3.5 text-verde" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+                Sem cartão
+              </div>
+            </div>
+          </div>
+
+          <!-- Formulário -->
+          <div class="px-7 py-6" id="form-container">
+            <form id="lead-form" novalidate>
+
+              <!-- Nome -->
+              <div class="mb-4">
+                <label class="block text-grafite font-medium text-sm mb-1.5 req">
+                  Nome completo
+                </label>
+                <input type="text" id="nome" class="fi"
+                       placeholder="Ex: Maria Silva"
+                       maxlength="80" autocomplete="name" />
+                <div class="emsg" id="e-nome">⚠ Informe seu nome.</div>
+              </div>
+
+              <!-- E-mail -->
+              <div class="mb-4">
+                <label class="block text-grafite font-medium text-sm mb-1.5 req">
+                  E-mail profissional
+                </label>
+                <input type="email" id="email" class="fi"
+                       placeholder="voce@empresa.com"
+                       autocomplete="email" />
+                <div class="emsg" id="e-email">⚠ Informe um e-mail válido.</div>
+              </div>
+
+              <!-- WhatsApp -->
+              <div class="mb-4">
+                <label class="block text-grafite font-medium text-sm mb-1.5 req">
+                  WhatsApp
+                </label>
+                <input type="tel" id="whats" class="fi"
+                       placeholder="(11) 99999-9999"
+                       maxlength="16" autocomplete="tel" />
+                <div class="emsg" id="e-whats">⚠ Informe um WhatsApp válido.</div>
+              </div>
+
+              <!-- Cargo -->
+              <div class="mb-4">
+                <label class="block text-grafite font-medium text-sm mb-1.5 req">
+                  Seu cargo
+                </label>
+                <select id="cargo" class="fi">
+                  <option value="">Selecione...</option>
+                  <option>CEO / Sócio / Diretor</option>
+                  <option>Gerente de RH</option>
+                  <option>Analista de RH</option>
+                  <option>HRBP / Business Partner</option>
+                  <option>Gestor de área (não RH)</option>
+                  <option>Consultor / Freelancer</option>
+                  <option>Estudante / Pesquisador</option>
+                  <option>Outro</option>
+                </select>
+                <div class="emsg" id="e-cargo">⚠ Selecione seu cargo.</div>
+              </div>
+
+              <!-- Porte da empresa -->
+              <div class="mb-5">
+                <label class="block text-grafite font-medium text-sm mb-1.5 req">
+                  Tamanho da empresa
+                </label>
+                <select id="porte" class="fi">
+                  <option value="">Selecione...</option>
+                  <option>Até 9 colaboradores</option>
+                  <option>10 a 49 colaboradores</option>
+                  <option>50 a 249 colaboradores</option>
+                  <option>250 a 999 colaboradores</option>
+                  <option>1.000+ colaboradores</option>
+                </select>
+                <div class="emsg" id="e-porte">⚠ Selecione o porte.</div>
+              </div>
+
+              <!-- LGPD compacto -->
+              <div class="flex items-start gap-2.5 mb-5">
+                <div id="cbox" onclick="toggleConsent()"
+                     class="mt-0.5 w-4 h-4 border-2 border-borda rounded flex items-center
+                            justify-center flex-shrink-0 cursor-pointer transition-all duration-200">
+                  <svg id="ccheck" class="w-2.5 h-2.5 text-white hidden" fill="none"
+                       viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                  </svg>
+                </div>
+                <label class="text-xs text-cinza leading-relaxed cursor-pointer"
+                       onclick="toggleConsent()">
+                  Concordo em receber conteúdos de RH Estratégico.
+                  Dados protegidos conforme a
+                  <strong class="text-grafite">LGPD</strong>.
+                  Cancele quando quiser.
+                </label>
+              </div>
+              <div class="emsg mb-3" id="e-consent">⚠ É necessário aceitar para continuar.</div>
+
+              <!-- BOTÃO CTA -->
+              <button type="button" id="btn-download"
+                      onclick="submitLead()"
+                      class="btn-pulse w-full bg-verde hover:bg-verde-hv text-white
+                             font-bold text-base py-4 rounded-xl transition-all duration-200
+                             flex items-center justify-center gap-3
+                             hover:-translate-y-0.5 hover:shadow-xl">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4
+                       4m0 0l-4-4m4 4V4"/>
+                </svg>
+                Quero Baixar Agora
+              </button>
+
+              <!-- Micro-copy abaixo do botão -->
+              <p class="text-center text-cinza text-xs mt-3 flex items-center justify-center gap-1.5">
+                <svg class="w-3.5 h-3.5 text-verde" fill="none" viewBox="0 0 24 24"
+                     stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0
+                       00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                </svg>
+                Seus dados estão seguros · LGPD
+              </p>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- Contador de urgência -->
+        <div class="mt-4 bg-terra/10 border border-terra/20 rounded-xl px-5 py-3
+                    flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <div class="w-2 h-2 rounded-full bg-terra animate-pulse"></div>
+            <p class="text-terra text-xs font-semibold">Oferta por tempo limitado</p>
+          </div>
+          <p class="text-terra text-xs font-bold" id="countdown">23:59:47</p>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+
+  <!-- ══════════ TELA DE SUCESSO + DOWNLOAD ══════════ -->
+  <div id="success-screen"
+       class="fixed inset-0 bg-black/50 z-50 items-center justify-center p-5">
+    <div class="bg-white rounded-2xl max-w-md w-full p-8 text-center"
+         style="box-shadow:0 8px 40px rgba(0,0,0,.2)">
+
+      <!-- Ícone de sucesso -->
+      <div class="w-16 h-16 bg-verde-lt rounded-full flex items-center
+                  justify-center mx-auto mb-5">
+        <svg class="w-8 h-8 text-verde" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+
+      <h3 class="text-azul text-xl font-bold mb-2">
+        Pronto, <span id="suc-nome"></span>!
+      </h3>
+      <p class="text-cinza text-sm leading-relaxed mb-6">
+        Seu material está pronto para download. Também enviamos o link
+        para <strong id="suc-email" class="text-grafite"></strong>.
+      </p>
+
+      <!-- Botão de download real -->
+      <a id="btn-real-download"
+         href="#"
+         download
+         class="flex items-center justify-center gap-3 w-full bg-verde
+                hover:bg-verde-hv text-white font-bold text-base py-4
+                rounded-xl transition-all duration-200 mb-4 hover:shadow-lg">
+        <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+             stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+        </svg>
+        Baixar Agora
+      </a>
+
+      <!-- Ações secundárias -->
+      <div class="flex gap-3">
+        <a href="index.html"
+           class="flex-1 border border-borda text-cinza text-sm font-medium
+                  py-2.5 rounded-xl hover:border-azul hover:text-azul
+                  transition-colors duration-200 text-center">
+          Ver mais materiais
+        </a>
+        <a href="diagnostico.html"
+           class="flex-1 bg-azul text-white text-sm font-medium py-2.5
+                  rounded-xl hover:bg-azul-md transition-colors duration-200
+                  text-center">
+          Diagnóstico gratuito
+        </a>
+      </div>
+
+      <!-- Contador regressivo para fechar -->
+      <p class="text-cinza text-xs mt-4" id="close-countdown">
+        Esta janela fecha em <span id="close-sec">10</span> segundos
+      </p>
+    </div>
+  </div>
+
+
+  <!-- ══════════ FOOTER ══════════ -->
+  <footer class="border-t border-borda bg-white mt-auto">
+    <div class="max-w-5xl mx-auto px-5 py-6 flex flex-col sm:flex-row
+                items-center justify-between gap-4">
+      <p class="text-cinza text-xs">© 2026 Felipe Barroso · Todos os direitos reservados</p>
+      <div class="flex items-center gap-4">
+        <a href="index.html" class="text-cinza hover:text-azul text-xs transition-colors">
+          Materiais
+        </a>
+        <a href="diagnostico.html" class="text-cinza hover:text-azul text-xs transition-colors">
+          Diagnóstico
+        </a>
+        <span class="text-cinza text-xs flex items-center gap-1">
+          <svg class="w-3.5 h-3.5 text-verde" fill="none" viewBox="0 0 24 24"
+               stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0
+                 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+          </svg>
+          LGPD
+        </span>
+      </div>
+    </div>
+  </footer>
+  <script>
+    // ══════════════════════════════════════
+    // CONFIGURAÇÃO DO MATERIAL
+    // Edite aqui para cada material diferente
+    // ══════════════════════════════════════
+    var MATERIAL = {
+      titulo:   'Mapa de Maturidade de RH',
+      arquivo:  'Mapa-de-Maturidade-de-RH.xlsx',
+      descricao:'Descubra em qual estágio de maturidade o RH da sua empresa se encontra e receba um roteiro claro de evolução.',
+      beneficios: [
+        'Diagnóstico visual dos 5 níveis de maturidade de RH',
+        'Checklist de processos por estágio (operacional ao estratégico)',
+        'Indicadores-chave para cada nível de evolução',
+        'Plano de ação prático para avançar ao próximo estágio',
+        'Ferramenta pronta para apresentar à liderança'
+      ]
+    };
+
+    // ── Estado ──
+   
+ var consent = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+  initPhoneMask();
+  animateRatingBar();
+});
+
+function initPhoneMask() {
+  var el = document.getElementById('whats');
+  if (!el) return;
+  el.addEventListener('input', function() {
+    var v = this.value.replace(/\D/g,'').substring(0,11);
+    if (v.length > 6) {
+      v = '('+v.substring(0,2)+') '+v.substring(2,7)+'-'+v.substring(7);
+    } else if (v.length > 2) {
+      v = '('+v.substring(0,2)+') '+v.substring(2);
+    } else if (v.length > 0) {
+      v = '('+v;
+    }
+    this.value = v;
+  });
+}
+
+function toggleConsent() {
+  consent = !consent;
+  var box   = document.getElementById('cbox');
+  var check = document.getElementById('ccheck');
+  if (consent) {
+    box.style.background  = '#1F4E79';
+    box.style.borderColor = '#1F4E79';
+    check.classList.remove('hidden');
+  } else {
+    box.style.background  = '';
+    box.style.borderColor = '#E2E5EA';
+    check.classList.add('hidden');
+  }
+  hideErr('e-consent');
+}
+
+function showErr(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.add('show');
+}
+
+function hideErr(id) {
+  var el = document.getElementById(id);
+  if (el) el.classList.remove('show');
+}
+
+function clearErrs() {
+  document.querySelectorAll('.emsg.show').forEach(function(e) {
+    e.classList.remove('show');
+  });
+  document.querySelectorAll('.fi.err').forEach(function(e) {
+    e.classList.remove('err');
+  });
+}
+
+function isEmail(v) {
+  var p = v.split('@');
+  if (p.length !== 2 || p[0].length === 0) return false;
+  var d = p[1].split('.');
+  return d.length >= 2 && d[d.length-1].length >= 2;
+}
+
+function validateForm() {
+  clearErrs();
+  var ok    = true;
+  var nome  = document.getElementById('nome');
+  var email = document.getElementById('email');
+  var whats = document.getElementById('whats');
+  var cargo = document.getElementById('cargo');
+  var porte = document.getElementById('porte');
+
+  if (!nome || nome.value.trim().length < 3) {
+    showErr('e-nome');
+    if (nome) nome.classList.add('err');
+    ok = false;
+  }
+  if (!email || !isEmail(email.value.trim())) {
+    showErr('e-email');
+    if (email) email.classList.add('err');
+    ok = false;
+  }
+  if (!whats || whats.value.replace(/\D/g,'').length < 10) {
+    showErr('e-whats');
+    if (whats) whats.classList.add('err');
+    ok = false;
+  }
+  if (!cargo || cargo.value === '') {
+    showErr('e-cargo');
+    if (cargo) cargo.classList.add('err');
+    ok = false;
+  }
+  if (!porte || porte.value === '') {
+    showErr('e-porte');
+    if (porte) porte.classList.add('err');
+    ok = false;
+  }
+  if (!consent) {
+    showErr('e-consent');
+    ok = false;
+  }
+  return ok;
+}
+
+function submitLead() {
+  if (!validateForm()) {
+    var first = document.querySelector('.emsg.show');
+    if (first) first.scrollIntoView({ behavior:'smooth', block:'center' });
+    return;
+  }
+
+  var btn = document.getElementById('btn-download');
+  btn.disabled = true;
+  btn.innerHTML =
+    '<svg class="w-5 h-5 spinner" fill="none" viewBox="0 0 24 24"' +
+    ' stroke="currentColor" stroke-width="2">' +
+    '<path stroke-linecap="round" stroke-linejoin="round"' +
+    ' d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9' +
+    'm11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>' +
+    '</svg> Liberando acesso...';
+
+  var data = {
+    nome:      document.getElementById('nome').value.trim(),
+    email:     document.getElementById('email').value.trim(),
+    whatsapp:  document.getElementById('whats').value.trim(),
+    cargo:     document.getElementById('cargo').value,
+    porte:     document.getElementById('porte').value,
+    material:  'Guia de Onboarding Estratégico',
+    timestamp: new Date().toISOString(),
+    origem:    document.referrer || 'direto'
+  };
+
+  try {
+    var leads = JSON.parse(localStorage.getItem('leads_fb') || '[]');
+    leads.push(data);
+    localStorage.setItem('leads_fb', JSON.stringify(leads));
+  } catch(e) {}
+
+  fetch('https://script.google.com/macros/s/AKfycbxJoSYYeVV1DG-HCWQ_pdKeWJ1TfPeynBperk51nXouFKE1196ELMhuCmW9wiKRH2g-mw/exec', {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: {
+      'Content-Type': 'text/plain'
+    },
+    body: JSON.stringify(data)
+  })
+  .then(function() {
+    console.log('Enviado para o Google Sheets.');
+    liberarDownload(data);
+  })
+  .catch(function(err) {
+    console.log('Erro:', err);
+    liberarDownload(data);
+  });
+}
+
+function liberarDownload(data) {
+  document.getElementById('suc-nome').textContent  = data.nome.split(' ')[0];
+  document.getElementById('suc-email').textContent = data.email;
+
+  document.getElementById('modal-success').classList.add('show');
+
+  setTimeout(function() {
+    var link = document.createElement('a');
+    link.href     = 'Mapa-de-Maturidade-de-RH.xlsx';
+    link.download = 'Mapa-de-Maturidade-de-RH.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }, 1000);
+
+  var sec = 10;
+  var timer = setInterval(function() {
+    sec--;
+    var el = document.getElementById('close-sec');
+    if (el) el.textContent = sec;
+    if (sec <= 0) {
+      clearInterval(timer);
+      document.getElementById('modal-success').classList.remove('show');
+    }
+  }, 1000);
+}
+
+function animateRatingBar() {
+  setTimeout(function() {
+    var bar = document.getElementById('rating-bar');
+    if (bar) bar.style.width = '98%';
+  }, 600);
+}
+
+  </script>
+</body>
+</html>

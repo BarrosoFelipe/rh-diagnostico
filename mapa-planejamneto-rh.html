@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa Mental — Planejamento Estratégico de RH</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{font-family:'Inter',sans-serif;background:#050d1a;color:#fff;min-height:100vh;overflow-x:hidden}
+
+/* Canvas */
+#mapCanvas{position:relative;width:100%;height:100vh;min-height:700px;overflow:hidden}
+#svgLayer{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:1}
+
+/* Nó central */
+.n-central{position:absolute;transform:translate(-50%,-50%);z-index:20;cursor:pointer}
+.n-central .circle{
+  width:170px;height:170px;border-radius:50%;
+  background:radial-gradient(circle at 38% 38%,#2E6DA4,#1F4E79 60%,#0a1a30);
+  border:3px solid rgba(61,165,122,0.7);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:14px;
+  transition:transform .3s ease,box-shadow .3s ease;
+  box-shadow:0 0 0 8px rgba(31,78,121,0.15),0 0 40px rgba(31,78,121,0.6),0 0 80px rgba(61,165,122,0.2);
+  animation:centralPulse 3s ease-in-out infinite}
+.n-central .circle:hover{transform:scale(1.08);
+  box-shadow:0 0 0 14px rgba(31,78,121,0.2),0 0 60px rgba(31,78,121,0.8),0 0 100px rgba(61,165,122,0.35)}
+@keyframes centralPulse{
+  0%,100%{box-shadow:0 0 0 8px rgba(31,78,121,0.15),0 0 40px rgba(31,78,121,0.6),0 0 80px rgba(61,165,122,0.2)}
+  50%{box-shadow:0 0 0 16px rgba(31,78,121,0.08),0 0 60px rgba(31,78,121,0.8),0 0 100px rgba(61,165,122,0.3)}
+}
+.c-icon{font-size:2.3rem;line-height:1}
+.c-title{font-size:.7rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.05em;line-height:1.25;margin-top:6px}
+.c-sub{font-size:.5rem;color:rgba(255,255,255,.5);margin-top:4px;line-height:1.3}
+
+/* Nós pilar */
+.n-pilar{position:absolute;transform:translate(-50%,-50%);z-index:20;cursor:pointer}
+.n-pilar .hex{
+  width:120px;height:120px;
+  clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:12px;transition:transform .3s,filter .3s}
+.n-pilar .hex:hover{transform:scale(1.14);filter:brightness(1.25)}
+.p-icon{font-size:1.7rem}
+.p-label{font-size:.55rem;font-weight:800;color:#fff;text-transform:uppercase;letter-spacing:.04em;line-height:1.25;margin-top:5px}
+
+/* Subnós – flags (gargalos) */
+.n-flag{position:absolute;transform:translate(-50%,-50%);z-index:20;cursor:pointer}
+.n-flag .fbox{
+  width:118px;background:rgba(217,122,74,.12);
+  border:1.5px solid rgba(217,122,74,.55);
+  border-radius:10px;padding:8px 7px;text-align:center;
+  transition:all .28s ease}
+.n-flag .fbox:hover{
+  background:rgba(217,122,74,.24);border-color:#D97A4A;
+  transform:scale(1.1);box-shadow:0 6px 22px rgba(217,122,74,.35)}
+.f-icon{font-size:.9rem}
+.f-label{font-size:.5rem;font-weight:600;color:#D97A4A;line-height:1.3;margin-top:3px}
+
+/* Subnós – soluções */
+.n-sol{position:absolute;transform:translate(-50%,-50%);z-index:20;cursor:pointer}
+.n-sol .sbox{
+  width:118px;background:rgba(61,165,122,.12);
+  border:1.5px solid rgba(61,165,122,.55);
+  border-radius:10px;padding:8px 7px;text-align:center;
+  transition:all .28s ease}
+.n-sol .sbox:hover{
+  background:rgba(61,165,122,.24);border-color:#3DA57A;
+  transform:scale(1.1);box-shadow:0 6px 22px rgba(61,165,122,.35)}
+.s-icon{font-size:.9rem}
+.s-label{font-size:.5rem;font-weight:600;color:#3DA57A;line-height:1.3;margin-top:3px}
+
+/* Header */
+#pageHeader{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(5,13,26,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding:9px 18px;display:flex;align-items:center;justify-content:space-between}
+.hlogo{display:flex;align-items:center;gap:10px}
+.hlogo-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:linear-gradient(135deg,#1F4E79,#3DA57A);
+  display:flex;align-items:center;justify-content:center;font-size:.9rem}
+.hlogo-text{font-size:.78rem;font-weight:700;color:#fff}
+.hlogo-sub{font-size:.58rem;color:rgba(255,255,255,.35)}
+.hbadges{display:flex;gap:7px}
+.hbadge{padding:3px 10px;border-radius:20px;font-size:.58rem;font-weight:600}
+
+/* Legenda */
+#legendBar{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  background:rgba(5,13,26,.95);backdrop-filter:blur(16px);
+  border-top:1px solid rgba(255,255,255,.07);
+  padding:7px 16px;display:flex;align-items:center;justify-content:center;
+  gap:20px;flex-wrap:wrap}
+.leg-item{display:flex;align-items:center;gap:6px}
+.leg-dot{width:9px;height:9px;border-radius:50%}
+.leg-txt{font-size:.58rem;color:rgba(255,255,255,.5)}
+.leg-dash{
+  width:22px;height:2px;
+  background:repeating-linear-gradient(90deg,#3DA57A 0,#3DA57A 5px,transparent 5px,transparent 9px)}
+
+/* Botão caminho crítico */
+#btnCaminho{
+  position:fixed;bottom:50px;right:16px;z-index:150;
+  width:46px;height:46px;border-radius:50%;
+  background:rgba(31,78,121,.92);border:1px solid rgba(61,165,122,.45);
+  color:#fff;font-size:1.15rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .28s ease}
+#btnCaminho:hover{background:#1F4E79;box-shadow:0 6px 22px rgba(31,78,121,.55)}
+
+/* Tooltip */
+#tooltip{
+  position:fixed;z-index:500;max-width:240px;
+  background:rgba(10,20,38,.97);border:1px solid rgba(255,255,255,.1);
+  border-radius:12px;padding:11px 13px;pointer-events:none;
+  opacity:0;transition:opacity .18s ease;backdrop-filter:blur(18px);
+  box-shadow:0 16px 50px rgba(0,0,0,.65)}
+#tooltip.show{opacity:1}
+.tt-title{font-size:.72rem;font-weight:700;color:#fff;margin-bottom:4px}
+.tt-desc{font-size:.62rem;color:rgba(255,255,255,.6);line-height:1.45}
+.tt-tag{display:inline-block;margin-top:7px;padding:2px 8px;border-radius:20px;font-size:.58rem;font-weight:600}
+.tt-pilar{background:rgba(31,78,121,.3);color:#7abaff;border:1px solid rgba(31,78,121,.5)}
+.tt-flag{background:rgba(217,122,74,.2);color:#D97A4A;border:1px solid rgba(217,122,74,.45)}
+.tt-sol{background:rgba(61,165,122,.2);color:#3DA57A;border:1px solid rgba(61,165,122,.45)}
+
+/* Painel lateral */
+#sidePanel{
+  position:fixed;top:0;right:0;width:340px;height:100vh;
+  background:rgba(8,18,34,.98);border-left:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(22px);z-index:300;
+  transform:translateX(100%);transition:transform .38s cubic-bezier(.4,0,.2,1);
+  overflow-y:auto;padding:22px 20px 40px}
+#sidePanel.open{transform:translateX(0)}
+#panelClose{
+  position:absolute;top:14px;right:14px;width:30px;height:30px;
+  border-radius:50%;border:1px solid rgba(255,255,255,.15);
+  background:none;color:#fff;cursor:pointer;font-size:.9rem;
+  display:flex;align-items:center;justify-content:center;transition:background .2s}
+#panelClose:hover{background:rgba(255,255,255,.1)}
+.p-badge{display:inline-block;padding:3px 11px;border-radius:20px;font-size:.62rem;font-weight:700;margin-bottom:10px;margin-top:4px}
+.p-title{font-size:1rem;font-weight:800;color:#fff;margin-bottom:7px;line-height:1.3}
+.p-desc{font-size:.72rem;color:rgba(255,255,255,.58);line-height:1.65;margin-bottom:14px}
+.p-section{margin-bottom:13px}
+.p-sec-title{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:rgba(255,255,255,.32);margin-bottom:7px}
+.p-flag-item{
+  background:rgba(217,122,74,.1);border:1px solid rgba(217,122,74,.22);
+  border-radius:9px;padding:8px 10px;margin-bottom:6px}
+.p-flag-title{font-size:.68rem;font-weight:600;color:#D97A4A;margin-bottom:3px}
+.p-flag-detail{font-size:.62rem;color:rgba(255,255,255,.52);line-height:1.5}
+.p-sol-item{
+  background:rgba(61,165,122,.1);border:1px solid rgba(61,165,122,.22);
+  border-radius:9px;padding:8px 10px;margin-bottom:6px}
+.p-sol-title{font-size:.68rem;font-weight:600;color:#3DA57A;margin-bottom:3px}
+.p-sol-detail{font-size:.62rem;color:rgba(255,255,255,.52);line-height:1.5}
+.p-impact{background:rgba(31,78,121,.22);border:1px solid rgba(31,78,121,.4);border-radius:9px;padding:9px 11px;margin-top:12px}
+.p-impact-label{font-size:.62rem;color:rgba(255,255,255,.55)}
+.p-impact-value{font-size:1.15rem;font-weight:900;display:block;margin-top:3px}
+
+/* Linhas SVG */
+.svg-normal{stroke:rgba(255,255,255,.14);stroke-width:1.4;fill:none}
+.svg-critical{
+  stroke:#3DA57A;stroke-width:2.6;stroke-dasharray:7 3;fill:none;
+  filter:drop-shadow(0 0 5px rgba(61,165,122,.65));animation:flowDash 1.8s linear infinite}
+@keyframes flowDash{to{stroke-dashoffset:-20}}
+
+/* Responsivo */
+@media(max-width:768px){
+  #sidePanel{width:100%}
+  .hbadges{display:none}
+}
+</style>
+</head>
+
+<body>
+
+<header id="pageHeader">
+  <div class="hlogo">
+    <div class="hlogo-icon">📊</div>
+    <div>
+      <div class="hlogo-text">Mapa: Planejamento Estratégico de RH</div>
+      <div class="hlogo-sub">Headcount · Desenvolvimento · Clima · Performance → Estratégia & EBITDA</div>
+    </div>
+  </div>
+  <div class="hbadges">
+    <span class="hbadge" style="background:rgba(31,78,121,.3);color:#7abaff;border:1px solid rgba(31,78,121,.5)">Visão 360º do Capital Humano</span>
+    <span class="hbadge" style="background:rgba(61,165,122,.2);color:#3DA57A;border:1px solid rgba(61,165,122,.4)">Clique nos nós</span>
+  </div>
+</header>
+
+<div id="mapCanvas">
+  <svg id="svgLayer"></svg>
+
+  <!-- NÓ CENTRAL -->
+  <div class="n-central" id="central"
+       style="left:50%;top:50%"
+       onclick="openPanel('central')"
+       onmouseenter="showTT(event,'central')"
+       onmouseleave="hideTT()">
+    <div class="circle">
+      <div class="c-icon">🧩</div>
+      <div class="c-title">Planejamento<br>Estratégico de RH</div>
+      <div class="c-sub">Conectando RH ao planejamento e ao EBITDA</div>
+    </div>
+  </div>
+
+  <!-- PILAR 1 – HEADCOUNT & CAPACIDADE -->
+  <div class="n-pilar" id="p1"
+       style="left:22%;top:22%"
+       onclick="openPanel('p1')"
+       onmouseenter="showTT(event,'p1')"
+       onmouseleave="hideTT()">
+    <div class="hex" style="background:linear-gradient(135deg,#1F4E79,#0d2a4a)">
+      <div class="p-icon">👥</div>
+      <div class="p-label">Headcount<br>& Capac. Org.</div>
+    </div>
+  </div>
+  <!-- Flags p1 -->
+  <div class="n-flag" id="f1a"
+       style="left:9%;top:12%"
+       onclick="openPanel('f1a')"
+       onmouseenter="showTT(event,'f1a')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">⚖️</div>
+      <div class="f-label">Sub / Super<br>dimensionamento</div>
+    </div>
+  </div>
+  <div class="n-flag" id="f1b"
+       style="left:24%;top:11%"
+       onclick="openPanel('f1b')"
+       onmouseenter="showTT(event,'f1b')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">📉</div>
+      <div class="f-label">Plano de Pessoas<br>Descolado da Estratégia</div>
+    </div>
+  </div>
+  <!-- Solução p1 -->
+  <div class="n-sol" id="s1"
+       style="left:9%;top:30%"
+       onclick="openPanel('s1')"
+       onmouseenter="showTT(event,'s1')"
+       onmouseleave="hideTT()">
+    <div class="sbox">
+      <div class="s-icon">✅</div>
+      <div class="s-label">Workforce Planning<br>Integrado</div>
+    </div>
+  </div>
+
+  <!-- PILAR 2 – DESENVOLVIMENTO & SUCESSÃO -->
+  <div class="n-pilar" id="p2"
+       style="left:78%;top:22%"
+       onclick="openPanel('p2')"
+       onmouseenter="showTT(event,'p2')"
+       onmouseleave="hideTT()">
+    <div class="hex" style="background:linear-gradient(135deg,#2a7a58,#1a4a38)">
+      <div class="p-icon">📈</div>
+      <div class="p-label">Desenvolvimento<br>& Sucessão</div>
+    </div>
+  </div>
+  <!-- Flags p2 -->
+  <div class="n-flag" id="f2a"
+       style="left:76%;top:11%"
+       onclick="openPanel('f2a')"
+       onmouseenter="showTT(event,'f2a')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">🧱</div>
+      <div class="f-label">Lacunas de<br>Competência Crítica</div>
+    </div>
+  </div>
+  <div class="n-flag" id="f2b"
+       style="left:91%;top:12%"
+       onclick="openPanel('f2b')"
+       onmouseenter="showTT(event,'f2b')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">🚪</div>
+      <div class="f-label">Posições Críticas<br>Sem Sucessores</div>
+    </div>
+  </div>
+  <!-- Solução p2 -->
+  <div class="n-sol" id="s2"
+       style="left:91%;top:30%"
+       onclick="openPanel('s2')"
+       onmouseenter="showTT(event,'s2')"
+       onmouseleave="hideTT()">
+    <div class="sbox">
+      <div class="s-icon">✅</div>
+      <div class="s-label">Matriz de Sucessão<br>& Academias</div>
+    </div>
+  </div>
+
+  <!-- PILAR 3 – CLIMA, ENG. & EXPERIÊNCIA -->
+  <div class="n-pilar" id="p3"
+       style="left:14%;top:52%"
+       onclick="openPanel('p3')"
+       onmouseenter="showTT(event,'p3')"
+       onmouseleave="hideTT()">
+    <div class="hex" style="background:linear-gradient(135deg,#b85e30,#7a3a1a)">
+      <div class="p-icon">🌡️</div>
+      <div class="p-label">Clima, Engajamento<br>& Experiência</div>
+    </div>
+  </div>
+  <!-- Flags p3 -->
+  <div class="n-flag" id="f3a"
+       style="left:5%;top:42%"
+       onclick="openPanel('f3a')"
+       onmouseenter="showTT(event,'f3a')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">📉</div>
+      <div class="f-label">eNPS<br>Instável</div>
+    </div>
+  </div>
+  <div class="n-flag" id="f3b"
+       style="left:5%;top:62%"
+       onclick="openPanel('f3b')"
+       onmouseenter="showTT(event,'f3b')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">🔄</div>
+      <div class="f-label">Ações de Clima<br>Não Estratégicas</div>
+    </div>
+  </div>
+  <!-- Solução p3 -->
+  <div class="n-sol" id="s3"
+       style="left:22%;top:65%"
+       onclick="openPanel('s3')"
+       onmouseenter="showTT(event,'s3')"
+       onmouseleave="hideTT()">
+    <div class="sbox">
+      <div class="s-icon">✅</div>
+      <div class="s-label">Agenda de EX<br>Data‑Driven</div>
+    </div>
+  </div>
+
+  <!-- PILAR 4 – PERFORMANCE & RECOMPENSAS -->
+  <div class="n-pilar" id="p4"
+       style="left:86%;top:52%"
+       onclick="openPanel('p4')"
+       onmouseenter="showTT(event,'p4')"
+       onmouseleave="hideTT()">
+    <div class="hex" style="background:linear-gradient(135deg,#1F4E79,#3DA57A)">
+      <div class="p-icon">🎯</div>
+      <div class="p-label">Performance<br>& Recompensas</div>
+    </div>
+  </div>
+  <!-- Flags p4 -->
+  <div class="n-flag" id="f4a"
+       style="left:95%;top:42%"
+       onclick="openPanel('f4a')"
+       onmouseenter="showTT(event,'f4a')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">📊</div>
+      <div class="f-label">Avaliação<br>Formalista</div>
+    </div>
+  </div>
+  <div class="n-flag" id="f4b"
+       style="left:95%;top:62%"
+       onclick="openPanel('f4b')"
+       onmouseenter="showTT(event,'f4b')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">💸</div>
+      <div class="f-label">Remuneração<br>Sem Ligação a KPIs</div>
+    </div>
+  </div>
+  <!-- Solução p4 -->
+  <div class="n-sol" id="s4"
+       style="left:78%;top:65%"
+       onclick="openPanel('s4')"
+       onmouseenter="showTT(event,'s4')"
+       onmouseleave="hideTT()">
+    <div class="sbox">
+      <div class="s-icon">✅</div>
+      <div class="s-label">Gestão de Desempenho<br>Contínua & Bônus por Valor</div>
+    </div>
+  </div>
+
+  <!-- PILAR 5 – PEOPLE ANALYTICS & GOVERNANÇA -->
+  <div class="n-pilar" id="p5"
+       style="left:50%;top:82%"
+       onclick="openPanel('p5')"
+       onmouseenter="showTT(event,'p5')"
+       onmouseleave="hideTT()">
+    <div class="hex" style="background:linear-gradient(135deg,#D97A4A,#1F4E79)">
+      <div class="p-icon">📡</div>
+      <div class="p-label">People Analytics<br>& Governança</div>
+    </div>
+  </div>
+  <!-- Flags p5 -->
+  <div class="n-flag" id="f5a"
+       style="left:33%;top:90%"
+       onclick="openPanel('f5a')"
+       onmouseenter="showTT(event,'f5a')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">🧮</div>
+      <div class="f-label">Decisões<br>Sem Dados</div>
+    </div>
+  </div>
+  <div class="n-flag" id="f5b"
+       style="left:67%;top:90%"
+       onclick="openPanel('f5b')"
+       onmouseenter="showTT(event,'f5b')"
+       onmouseleave="hideTT()">
+    <div class="fbox">
+      <div class="f-icon">🧩</div>
+      <div class="f-label">Indicadores<br>Isolados</div>
+    </div>
+  </div>
+  <!-- Solução p5 -->
+  <div class="n-sol" id="s5"
+       style="left:50%;top:88%"
+       onclick="openPanel('s5')"
+       onmouseenter="showTT(event,'s5')"
+       onmouseleave="hideTT()">
+    <div class="sbox">
+      <div class="s-icon">✅</div>
+      <div class="s-label">Painel RH‑Estratégia<br>& Comitê de Gente</div>
+    </div>
+  </div>
+
+</div><!-- mapCanvas -->
+
+<!-- Tooltip -->
+<div id="tooltip">
+  <div class="tt-title" id="ttTitle"></div>
+  <div class="tt-desc"  id="ttDesc"></div>
+  <div class="tt-tag"   id="ttTag"></div>
+</div>
+
+<!-- Painel -->
+<div id="sidePanel">
+  <button id="panelClose" onclick="closePanel()">✕</button>
+  <div id="panelBody"></div>
+</div>
+
+<!-- Legenda -->
+<div id="legendBar">
+  <div class="leg-item"><div class="leg-dot" style="background:#1F4E79;box-shadow:0 0 5px #1F4E79"></div><span class="leg-txt">Pilares estratégicos de RH</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#D97A4A;box-shadow:0 0 5px #D97A4A"></div><span class="leg-txt">Gargalos & riscos</span></div>
+  <div class="leg-item"><div class="leg-dot" style="background:#3DA57A;box-shadow:0 0 5px #3DA57A"></div><span class="leg-txt">Soluções & alavancas</span></div>
+  <div class="leg-item"><div class="leg-dash"></div><span class="leg-txt">Caminho crítico RH → EBITDA</span></div>
+</div>
+
+<button id="btnCaminho" onclick="openPanel('caminho')" title="Ver caminho crítico RH–Estratégia">🗺</button>
+
+<script>
+// =============== BASE DE DADOS ===============
+const DATA = {
+  // NÓ CENTRAL
+  central:{
+    badge:{text:'Nó Central',bg:'rgba(31,78,121,0.3)',color:'#7abaff',border:'rgba(31,78,121,0.5)'},
+    title:'🧩 Planejamento Estratégico de RH',
+    desc:'Conectar headcount, desenvolvimento, clima e performance ao planejamento estratégico e ao EBITDA. RH sai do papel operacional e passa a orquestrar capital humano como ativo de negócio.',
+    sections:[
+      {title:'Pergunta‑guia',items:[
+        {type:'sol',title:'Como o RH aumenta o EBITDA?',detail:'Ao garantir que pessoas certas, nas funções certas, com competências certas e clima saudável, executem a estratégia com alta performance.'}
+      ]},
+      {title:'Visão Integrada',items:[
+        {type:'sol',title:'4 dimensões de capital humano',detail:'1) Quantidade (headcount); 2) Capacidade (competências e sucessão); 3) Energia (clima e engajamento); 4) Direção (performance e incentivos).'}
+      ]}
+    ],
+    impact:{label:'EBITDA alavancado via RH',value:'+3 a +6 p.p.',color:'#3DA57A'}
+  },
+
+  // PILAR 1 – HEADCOUNT & CAPACIDADE
+  p1:{
+    badge:{text:'Pilar 01 · Quantidade & Capacidade',bg:'rgba(31,78,121,0.3)',color:'#7abaff',border:'rgba(31,78,121,0.5)'},
+    title:'👥 Headcount & Capacidade Organizacional',
+    desc:'Número certo de pessoas, nos papéis certos, no momento certo — com custo compatível com o plano de negócios.',
+    sections:[
+      {title:'Sinais de Alerta',items:[
+        {type:'flag',title:'Sub / superdimensionamento',detail:'Áreas críticas operando no limite, enquanto outras têm ociosidade. Faltam critérios objetivos para dimensionar equipes.'},
+        {type:'flag',title:'Plano de pessoas descolado da estratégia',detail:'Headcount definido por “copiar ano anterior + %” em vez de partir de metas de crescimento, eficiência ou inovação.'}
+      ]},
+      {title:'Solução Estratégica',items:[
+        {type:'sol',title:'Workforce Planning Integrado',detail:'Construir um plano anual de headcount junto com Finanças e áreas de negócio, com cenários (base, conservador, agressivo) e limites de custo de pessoal / receita.'}
+      ]}
+    ],
+    impact:{label:'Headcount como investimento',value:'+ produtividade / – custo ocioso',color:'#3DA57A'}
+  },
+  f1a:{
+    badge:{text:'Red Flag · Headcount',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'⚖️ Sub / Superdimensionamento',
+    desc:'Em algumas áreas, falta gente para entregar o básico. Em outras, sobram pessoas sem trabalho claro.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'Ausência de modelo de capacidade',detail:'Não existe cálculo objetivo de quantas pessoas são necessárias por volume de demanda (ex.: tickets/mês, pedidos, projetos).'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Burnout x folha inflada',detail:'De um lado, adoecimento e erros; de outro, custo de pessoal acima do necessário para o nível atual de negócio.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'Modelagem por processo',detail:'Definir indicadores de capacidade por área (ex.: chamados/analista) e revisar headcount trimestralmente com base em dados.'}
+      ]}
+    ],
+    impact:{label:'Folha otimizada sem perder entrega',value:'–5 a –10% em 12 meses',color:'#D97A4A'}
+  },
+  f1b:{
+    badge:{text:'Red Flag · Headcount',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'📉 Plano de Pessoas Descolado da Estratégia',
+    desc:'Budget de pessoal é construído reativamente, sem visão clara de quais papéis são críticos para a estratégia.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'RH fora da mesa de planejamento',detail:'Planejamento anual é feito por Finanças e áreas de negócio, e o RH apenas recebe o número final de vagas e cortes.'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Headcount cresce sem ROI',detail:'Contratações por urgência e pressões pontuais, sem cálculo de retorno sobre o investimento em gente.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'RH como coautor do plano',detail:'Envolver RH desde o início do ciclo orçamentário, com metas de FTE/receita, produtividade por função e headcount crítico por projeto estratégico.'}
+      ]}
+    ],
+    impact:{label:'Planejamento de pessoas',value:'alinhado ao plano de negócios',color:'#D97A4A'}
+  },
+  s1:{
+    badge:{text:'Solução · Headcount',bg:'rgba(61,165,122,0.2)',color:'#3DA57A',border:'rgba(61,165,122,0.45)'},
+    title:'✅ Workforce Planning Integrado',
+    desc:'Planejamento de headcount, custos de pessoal e capacidade produtiva feito em conjunto com o planejamento financeiro e estratégico.',
+    sections:[
+      {title:'Componentes',items:[
+        {type:'sol',title:'Mapa de funções críticas',detail:'Identificar cargos que são gargalos de crescimento ou de qualidade e priorizar headcount nesses pontos.'},
+        {type:'sol',title:'Cenários & limites',detail:'Definir cenários (base, agressivo) com limites de custo de pessoal/receita e productivity targets.'}
+      ]},
+      {title:'Resultados Esperados',items:[
+        {type:'sol',title:'Menos decisões emergenciais',detail:'Evitar contratações de última hora e cortes bruscos que destroem clima e conhecimento.'}
+      ]}
+    ],
+    impact:{label:'Headcount planejado',value:'+ previsibilidade / – sustos',color:'#3DA57A'}
+  },
+
+  // PILAR 2 – DESENVOLVIMENTO & SUCESSÃO
+  p2:{
+    badge:{text:'Pilar 02 · Capacidade & Continuidade',bg:'rgba(61,165,122,0.2)',color:'#3DA57A',border:'rgba(61,165,122,0.4)'},
+    title:'📈 Desenvolvimento & Sucessão',
+    desc:'Garantir que as competências críticas para executar a estratégia estejam presentes hoje — e tenham sucessores prontos amanhã.',
+    sections:[
+      {title:'Sinais de Alerta',items:[
+        {type:'flag',title:'Lacunas de competência crítica',detail:'Projetos estratégicos atrasam ou não saem do papel por falta de habilidades específicas.'},
+        {type:'flag',title:'Posições críticas sem sucessores',detail:'Saída de 1 ou 2 pessoas pode comprometer uma linha inteira de negócio.'}
+      ]},
+      {title:'Solução Estratégica',items:[
+        {type:'sol',title:'Matriz de sucessão + academias',detail:'Mapear posições críticas, definir sucessores e criar trilhas de desenvolvimento internas para acelerar prontidão.'}
+      ]}
+    ],
+    impact:{label:'Risco de continuidade',value:'drasticamente reduzido',color:'#3DA57A'}
+  },
+  f2a:{
+    badge:{text:'Red Flag · Desenvolvimento',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'🧱 Lacunas de Competência Crítica',
+    desc:'A estratégia existe no PPT, mas falta gente com as competências certas para executá-la.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'Levantamento de necessidades superficial',detail:'Treinamentos são baseados em percepções genéricas, não em análises de gaps de competências ligados aos objetivos estratégicos.'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Execução travada',detail:'Atraso em projetos digitais, de eficiência ou inovação por falta de skills técnicos e de liderança.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'Mapa de competências crítico‑estratégico',detail:'Listar competências necessárias para cada objetivo estratégico e cruzar com o nível atual das equipes, priorizando investimentos de L&D.'}
+      ]}
+    ],
+    impact:{label:'Investimento em desenvolvimento',value:'focado no que move a estratégia',color:'#D97A4A'}
+  },
+  f2b:{
+    badge:{text:'Red Flag · Sucessão',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'🚪 Posições Críticas Sem Sucessores',
+    desc:'Um único desligamento pode desorganizar uma área inteira, atrasar projetos e impactar clientes.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'Planejamento de sucessão inexistente',detail:'Não há mapa de posições críticas, sucessores potenciais ou plano de preparação.'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Risco operacional e de imagem',detail:'Vacância em posições‑chave gera perda de contratos, clientes e credibilidade com o mercado.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'Matriz 9‑Box + Plano de Sucessão',detail:'Avaliar desempenho × potencial, identificar talentos para sucessão e construir um plano de desenvolvimento acelerado.'}
+      ]}
+    ],
+    impact:{label:'Tempo para repor liderança',value:'de meses para semanas',color:'#D97A4A'}
+  },
+  s2:{
+    badge:{text:'Solução · Desenv. & Sucessão',bg:'rgba(61,165,122,0.2)',color:'#3DA57A',border:'rgba(61,165,122,0.45)'},
+    title:'✅ Matriz de Sucessão & Academias de Líderes',
+    desc:'Criar pipeline previsível de talentos para posições críticas e de liderança.',
+    sections:[
+      {title:'Componentes',items:[
+        {type:'sol',title:'Matriz de sucessão por função',detail:'Para cada posição crítica, mapear 1–3 possíveis sucessores e seu nível de prontidão (pronto, 1–2 anos, 3+ anos).'},
+        {type:'sol',title:'Academia de líderes',detail:'Programa contínuo para desenvolver liderança em níveis (coordenação, gerência, diretoria) com conteúdo prático e mentoria.'}
+      ]},
+      {title:'Resultados Esperados',items:[
+        {type:'sol',title:'Continuidade de negócios',detail:'Menos interrupções em projetos estratégicos com saídas inesperadas.'}
+      ]}
+    ],
+    impact:{label:'Risco de sucessão',value:'sob controle',color:'#3DA57A'}
+  },
+
+  // PILAR 3 – CLIMA, ENGAJAMENTO & EXPERIÊNCIA
+  p3:{
+    badge:{text:'Pilar 03 · Energia & Clima',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.4)'},
+    title:'🌡️ Clima, Engajamento & Experiência',
+    desc:'Energia do time, nível de engajamento e qualidade da experiência do colaborador em toda a jornada (EX).',
+    sections:[
+      {title:'Sinais de Alerta',items:[
+        {type:'flag',title:'eNPS instável entre áreas',detail:'Áreas com eNPS muito abaixo da média indicam risco de turnover e queda de performance local.'},
+        {type:'flag',title:'Ações de clima não estratégicas',detail:'Foco em brindes e eventos isolados, sem conexão com problemas de negócio ou indicadores de gente.'}
+      ]},
+      {title:'Solução Estratégica',items:[
+        {type:'sol',title:'Agenda de EX Data‑Driven',detail:'Usar dados de eNPS, pesquisas e turnover para priorizar iniciativas que impactem diretamente performance e retenção.'}
+      ]}
+    ],
+    impact:{label:'Engajamento conectado ao negócio',value:'+ produtividade / – turnover',color:'#3DA57A'}
+  },
+  f3a:{
+    badge:{text:'Red Flag · Clima',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'📉 eNPS Instável',
+    desc:'Oscilações fortes de engajamento entre áreas sem análise de causa e plano de ação estruturado.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'Diagnósticos superficiais',detail:'Pesquisas feitas, mas sem recorte por área/líder e sem entendimento de drivers de engajamento.'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Risco silencioso',detail:'Áreas críticas podem estar perdendo talentos de alta performance sem que o board veja o sinal antecipado.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'Modelos de regressão simples',detail:'Correlacionar eNPS com indicadores de performance, turnover e absenteísmo para priorizar ações em áreas mais sensíveis.'}
+      ]}
+    ],
+    impact:{label:'Engajamento como indicador de risco',value:'e de oportunidade',color:'#D97A4A'}
+  },
+  f3b:{
+    badge:{text:'Red Flag · EX',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'🔄 Ações de Clima Não Estratégicas',
+    desc:'Iniciativas pontuais (dia do hambúrguer, mimos aleatórios) sem atacar causas reais de desengajamento e turnover.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'Falta de tese de EX',detail:'RH não tem uma tese clara de como experiência do colaborador influencia resultados e quais alavancas priorizar.'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Custo sem retorno',detail:'Investimentos em “agradabilidade” sem impacto real em engajamento, performance ou retenção.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'Roadmap de EX por jornada',detail:'Mapear momentos‑chave (onboarding, avaliações, promoções, desligamento) e focar ações de alto impacto neles.'}
+      ]}
+    ],
+    impact:{label:'Investimento em clima',value:'focado no que gera valor',color:'#D97A4A'}
+  },
+  s3:{
+    badge:{text:'Solução · Clima & EX',bg:'rgba(61,165,122,0.2)',color:'#3DA57A',border:'rgba(61,165,122,0.45)'},
+    title:'✅ Agenda de Experiência do Colaborador Data‑Driven',
+    desc:'Clima e engajamento planejados com base em dados, não em achismos.',
+    sections:[
+      {title:'Componentes',items:[
+        {type:'sol',title:'Pesquisas de pulso por squad/área',detail:'Coletar feedback contínuo, com dashboards simples para líderes.'},
+        {type:'sol',title:'Planos de ação com owner',detail:'Cada ação de clima tem dono, prazo, indicador e é revisada pela liderança.'}
+      ]},
+      {title:'Resultados Esperados',items:[
+        {type:'sol',title:'eNPS alinhado ao crescimento',detail:'Engajamento puxa performance, não apenas satisfação momentânea.'}
+      ]}
+    ],
+    impact:{label:'Clima como ativo de execução',value:'e não custo de benefício',color:'#3DA57A'}
+  },
+
+  // PILAR 4 – PERFORMANCE & RECOMPENSAS
+  p4:{
+    badge:{text:'Pilar 04 · Direção & Incentivos',bg:'rgba(31,78,121,0.3)',color:'#7abaff',border:'rgba(31,78,121,0.5)'},
+    title:'🎯 Performance & Recompensas',
+    desc:'Clareza de metas, qualidade da avaliação e coerência entre desempenho e incentivos financeiros e não financeiros.',
+    sections:[
+      {title:'Sinais de Alerta',items:[
+        {type:'flag',title:'Avaliação formalista',detail:'Processos anuais burocráticos que não geram conversa de qualidade nem decisões reais.'},
+        {type:'flag',title:'Remuneração sem ligação a KPIs',detail:'Bônus e promoções pouco conectados a resultado e geração de valor.'}
+      ]},
+      {title:'Solução Estratégica',items:[
+        {type:'sol',title:'Gestão de desempenho contínua',detail:'Metas claras e acompanhamento regular, com reconhecimento alinhado à entrega e ao comportamento.'}
+      ]}
+    ],
+    impact:{label:'Performance alinhada à estratégia',value:'+ foco / – ruído',color:'#3DA57A'}
+  },
+  f4a:{
+    badge:{text:'Red Flag · Performance',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'📊 Avaliação Formalista',
+    desc:'Processo pesado, anual, de “empurrar formulário” sem conversa honesta sobre desempenho e desenvolvimento.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'Foco em compliance, não em gestão',detail:'Mais preocupação com “preencher o sistema” do que com a qualidade dos acordos de performance.'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Ceticismo sobre meritocracia',detail:'Colaboradores não acreditam que avaliações mudam algo na prática.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'Check‑ins trimestrais leves',detail:'Substituir a lógica de uma grande avaliação anual por conversas trimestrais de 30 minutos focadas em: metas, obstáculos e suporte.'}
+      ]}
+    ],
+    impact:{label:'Tempo de gestão',value:'mais bem investido',color:'#D97A4A'}
+  },
+  f4b:{
+    badge:{text:'Red Flag · Recompensas',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'💸 Remuneração Sem Ligação a KPIs',
+    desc:'Ganhos e promoções pouco conectados a entregas reais e à sustentação da cultura.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'Critérios pouco transparentes',detail:'As pessoas não entendem claramente o que precisam fazer para crescer ou ganhar mais.'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Desengajamento dos high performers',detail:'Os melhores percebem injustiça e tendem a procurar empresas com sistemas mais meritocráticos.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'Mapeamento de cargos & trilhas de remuneração',detail:'Estruturar faixas salariais, critérios de progressão e vincular parte do variável a KPIs de negócio e de equipe.'}
+      ]}
+    ],
+    impact:{label:'Incentivos coerentes',value:'comportamento certo + resultado certo',color:'#D97A4A'}
+  },
+  s4:{
+    badge:{text:'Solução · Performance & Pay',bg:'rgba(61,165,122,0.2)',color:'#3DA57A',border:'rgba(61,165,122,0.45)'},
+    title:'✅ Gestão de Desempenho Contínua & Bônus por Valor',
+    desc:'Construir um sistema em que metas claras, feedback contínuo e incentivos formam um ciclo único.',
+    sections:[
+      {title:'Componentes',items:[
+        {type:'sol',title:'OKRs ou metas SMART alinhadas à estratégia',detail:'Cada pessoa sabe como seu resultado impacta o resultado da empresa.'},
+        {type:'sol',title:'Bônus vinculado a KPIs & valores',detail:'Parte da remuneração variável atrelada a indicadores de negócio e à aderência à cultura.'}
+      ]},
+      {title:'Resultados Esperados',items:[
+        {type:'sol',title:'Execução disciplinada da estratégia',detail:'Time puxa na mesma direção, com clareza de prioridades.'}
+      ]}
+    ],
+    impact:{label:'Performance com ROI claro',value:'para colaborador e empresa',color:'#3DA57A'}
+  },
+
+  // PILAR 5 – PEOPLE ANALYTICS & GOVERNANÇA
+  p5:{
+    badge:{text:'Pilar 05 · Dados & Governança',bg:'rgba(217,122,74,0.15)',color:'#D97A4A',border:'rgba(217,122,74,0.35)'},
+    title:'📡 People Analytics & Governança',
+    desc:'Decisões de gente tomadas com base em dados confiáveis, governança clara e rituais com a alta liderança.',
+    sections:[
+      {title:'Sinais de Alerta',items:[
+        {type:'flag',title:'Decisões sem dados',detail:'Planejamento de RH baseado em percepção e narrativas, não em indicadores.'},
+        {type:'flag',title:'Indicadores isolados',detail:'Cada área mede seus números, mas não há visão integrada para o comitê executivo.'}
+      ]},
+      {title:'Solução Estratégica',items:[
+        {type:'sol',title:'Painel RH‑Estratégia & Comitê de Gente',detail:'Dashboard enxuto e recorrência mensal com a diretoria para decisões de gente.'}
+      ]}
+    ],
+    impact:{label:'RH como parceiro de negócio',value:'não apenas área de suporte',color:'#3DA57A'}
+  },
+  f5a:{
+    badge:{text:'Red Flag · Dados',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'🧮 Decisões Sem Dados',
+    desc:'Contratar, promover, mover e demitir com base em impressões e urgência, não em fatos.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'Falta de infraestrutura mínima de dados',detail:'Informações espalhadas em planilhas, sistemas desconectados e relatórios manuais.'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Baixo poder de influência do RH',detail:'Sem números, RH não consegue sustentar propostas diante do board.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'Data mart simples de RH',detail:'Começar com poucos indicadores chave (headcount, turnover, absenteísmo, eNPS) em uma única base confiável.'}
+      ]}
+    ],
+    impact:{label:'Tomada de decisão',value:'mais previsível e defensável',color:'#D97A4A'}
+  },
+  f5b:{
+    badge:{text:'Red Flag · Governança',bg:'rgba(217,122,74,0.2)',color:'#D97A4A',border:'rgba(217,122,74,0.45)'},
+    title:'🧩 Indicadores Isolados',
+    desc:'Cada área apresenta “seus números” sem uma narrativa integrada sobre capital humano.',
+    sections:[
+      {title:'Causa Raiz',items:[
+        {type:'flag',title:'Falta de governança de gente',detail:'Não existe fórum fixo para discutir pessoas com a mesma seriedade que se discute orçamento.'}
+      ]},
+      {title:'Impacto',items:[
+        {type:'flag',title:'Foco em incêndios, não em tendências',detail:'Board reage a crises pontuais de talentos em vez de antecipar movimentos com base em tendências.'}
+      ]},
+      {title:'Solução',items:[
+        {type:'sol',title:'Comitê de Gente mensal',detail:'Reunião com diretoria para revisar indicadores de RH e decisões críticas (promoções, sucessão, investimentos em desenvolvimento).'}
+      ]}
+    ],
+    impact:{label:'Agenda de pessoas formalizada',value:'no calendário do board',color:'#D97A4A'}
+  },
+  s5:{
+    badge:{text:'Solução · People Analytics',bg:'rgba(61,165,122,0.2)',color:'#3DA57A',border:'rgba(61,165,122,0.45)'},
+    title:'✅ Painel RH‑Estratégia & Comitê de Gente',
+    desc:'Criar um painel sintético e um fórum regular para tratar pessoas como pilar do planejamento.',
+    sections:[
+      {title:'Componentes',items:[
+        {type:'sol',title:'Dashboard executivo de RH',detail:'5–10 indicadores chave (turnover, engajamento, sucessão, produtividade) ligados à estratégia.'},
+        {type:'sol',title:'Rituais de decisão',detail:'Comitê mensal para aprovar movimentos críticos (promoções, planos de sucessão, grandes contratações).'}
+      ]},
+      {title:'Resultados Esperados',items:[
+        {type:'sol',title:'Maior previsibilidade',detail:'Menos surpresas em temas de talentos e clima, mais alinhamento entre RH e negócio.'}
+      ]}
+    ],
+    impact:{label:'RH na mesa de decisão',value:'com dados e narrativa',color:'#3DA57A'}
+  },
+
+  // CAMINHO CRÍTICO RH → EBITDA
+  caminho:{
+    badge:{text:'Caminho Crítico',bg:'rgba(61,165,122,0.2)',color:'#3DA57A',border:'rgba(61,165,122,0.45)'},
+    title:'🗺 Caminho Crítico RH → EBITDA',
+    desc:'Sequência mínima de intervenções para traduzir planejamento de RH em resultado financeiro perceptível.',
+    sections:[
+      {title:'Passo 1 — Dimensionar (P1)',items:[
+        {type:'sol',title:'Pergunta‑chave',detail:'Temos pessoas suficientes (e não em excesso) nos pontos que mais geram receita ou protegem margem?'}
+      ]},
+      {title:'Passo 2 — Garantir capacidade (P2)',items:[
+        {type:'sol',title:'Pergunta‑chave',detail:'Temos as competências e sucessores necessários para entregar o plano de 12–36 meses?'}
+      ]},
+      {title:'Passo 3 — Proteger energia (P3)',items:[
+        {type:'sol',title:'Pergunta‑chave',detail:'As áreas críticas estão em um nível saudável de engajamento para sustentar performance sem queimar o time?'}
+      ]},
+      {title:'Passo 4 — Alinhar incentivos (P4)',items:[
+        {type:'sol',title:'Pergunta‑chave',detail:'As pessoas são recompensadas por fazer o que o plano estratégico precisa que elas façam?'}
+      ]},
+      {title:'Passo 5 — Governar com dados (P5)',items:[
+        {type:'sol',title:'Pergunta‑chave',detail:'O board recebe, todo mês, um raio‑X de gente tão consistente quanto o de resultados financeiros?'}
+      ]}
+    ],
+    impact:{label:'Impacto potencial no EBITDA',value:'+3 a +6 p.p. em 2–3 anos',color:'#3DA57A'}
+  }
+};
+</script>
+
+<script>
+// =============== TOOLTIP ===============
+const ttEl    = document.getElementById('tooltip');
+const ttTitle = document.getElementById('ttTitle');
+const ttDesc  = document.getElementById('ttDesc');
+const ttTag   = document.getElementById('ttTag');
+
+function showTT(evt, key){
+  const d = DATA[key];
+  if(!d) return;
+  ttTitle.textContent = d.title;
+  ttDesc.textContent  = d.desc;
+
+  let cls = 'tt-pilar';
+  if(key.startsWith('f')) cls = 'tt-flag';
+  if(key.startsWith('s')) cls = 'tt-sol';
+
+  ttTag.className = 'tt-tag ' + cls;
+  ttTag.textContent = d.badge ? d.badge.text : '';
+
+  const x = evt.clientX + 14;
+  const y = evt.clientY + 14;
+  ttEl.style.left = x + 'px';
+  ttEl.style.top  = y + 'px';
+  ttEl.classList.add('show');
+}
+function hideTT(){ ttEl.classList.remove('show'); }
+
+// =============== PAINEL LATERAL ===============
+const panel     = document.getElementById('sidePanel');
+const panelBody = document.getElementById('panelBody');
+
+function openPanel(key){
+  const d = DATA[key];
+  if(!d) return;
+
+  let html = '';
+
+  if(d.badge){
+    html += `<div class="p-badge" style="background:${d.badge.bg};color:${d.badge.color};border:1px solid ${d.badge.border}">${d.badge.text}</div>`;
+  }
+  html += `<div class="p-title">${d.title}</div>`;
+  html += `<div class="p-desc">${(d.desc || '').replace(/\n/g,'<br>')}</div>`;
+
+  (d.sections || []).forEach(sec=>{
+    html += `<div class="p-section">`;
+    html += `<div class="p-sec-title">${sec.title}</div>`;
+    (sec.items || []).forEach(it=>{
+      if(it.type === 'flag'){
+        html += `
+          <div class="p-flag-item">
+            <div class="p-flag-title">${it.title}</div>
+            <div class="p-flag-detail">${(it.detail || '').replace(/\n/g,'<br>')}</div>
+          </div>`;
+      } else {
+        html += `
+          <div class="p-sol-item">
+            <div class="p-sol-title">${it.title}</div>
+            <div class="p-sol-detail">${(it.detail || '').replace(/\n/g,'<br>')}</div>
+          </div>`;
+      }
+    });
+    html += `</div>`;
+  });
+
+  if(d.impact){
+    html += `
+      <div class="p-impact">
+        <span class="p-impact-label">${d.impact.label}</span>
+        <span class="p-impact-value" style="color:${d.impact.color}">${d.impact.value}</span>
+      </div>`;
+  }
+
+  panelBody.innerHTML = html;
+  panel.classList.add('open');
+}
+function closePanel(){ panel.classList.remove('open'); }
+
+// =============== LINHAS SVG ===============
+const svg     = document.getElementById('svgLayer');
+const canvas  = document.getElementById('mapCanvas');
+
+function getCenter(el){
+  const cRect = canvas.getBoundingClientRect();
+  const r = el.getBoundingClientRect();
+  return {
+    x: r.left - cRect.left + r.width/2,
+    y: r.top  - cRect.top  + r.height/2
+  };
+}
+
+function drawLine(id1,id2,critical=false){
+  const el1 = document.getElementById(id1);
+  const el2 = document.getElementById(id2);
+  if(!el1 || !el2) return;
+  const p1 = getCenter(el1);
+  const p2 = getCenter(el2);
+  const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1',p1.x);
+  line.setAttribute('y1',p1.y);
+  line.setAttribute('x2',p2.x);
+  line.setAttribute('y2',p2.y);
+  line.setAttribute('class',critical ? 'svg-critical' : 'svg-normal');
+  svg.appendChild(line);
+}
+
+function redrawConnections(){
+  svg.innerHTML = '';
+
+  // Central → Pilares
+  drawLine('central','p1');
+  drawLine('central','p2');
+  drawLine('central','p3');
+  drawLine('central','p4');
+  drawLine('central','p5');
+
+  // P1
+  drawLine('p1','f1a'); drawLine('p1','f1b'); drawLine('p1','s1');
+  // P2
+  drawLine('p2','f2a'); drawLine('p2','f2b'); drawLine('p2','s2');
+  // P3
+  drawLine('p3','f3a'); drawLine('p3','f3b'); drawLine('p3','s3');
+  // P4
+  drawLine('p4','f4a'); drawLine('p4','f4b'); drawLine('p4','s4');
+  // P5
+  drawLine('p5','f5a'); drawLine('p5','f5b'); drawLine('p5','s5');
+
+  // Caminho crítico: P1 → P2 → P3 → P4 → P5 → Central
+  drawLine('p1','p2',true);
+  drawLine('p2','p3',true);
+  drawLine('p3','p4',true);
+  drawLine('p4','p5',true);
+  drawLine('p5','central',true);
+}
+
+window.addEventListener('load',redrawConnections);
+window.addEventListener('resize',()=>{ hideTT(); redrawConnections(); });
+</script>
+
+</body>
+</html>
