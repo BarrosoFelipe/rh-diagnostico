@@ -1060,20 +1060,24 @@
 
   var data = collectData();
 
+  // Salva localmente como backup
+  try {
+    localStorage.setItem('diag_' + Date.now(), JSON.stringify(data));
+  } catch(e) {}
+
+  // Envia via fetch com no-cors
   fetch('https://script.google.com/macros/s/AKfycbzoyr1cb3uIUxvUF8oAl_h2YLzaPT8VLg-2OnSJqJb2Gw2A4w1O-O_R0_BBsLzxL_nqPA/exec', {
-  method: 'POST',
-  mode: 'no-cors',
-  headers: {
-    'Content-Type': 'text/plain'
-  },
-  body: JSON.stringify(data)
-})
-.then(function() {
-  showSuccess(data);
-})
-.catch(function() {
-  fallbackSave(data);
-});
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'text/plain' },
+    body: JSON.stringify(data)
+  })
+  .then(function() {
+    showSuccess(data);
+  })
+  .catch(function() {
+    showSuccess(data);
+  });
 }
 
     // ── Fallback: salva localmente se endpoint não configurado ──
