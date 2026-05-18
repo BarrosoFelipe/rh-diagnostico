@@ -565,39 +565,80 @@ onmouseout="this.style.boxShadow='0 2px 12px rgba(31,78,121,0.07)';this.style.tr
 </article>
 
 
-      <!-- ── CARD 6 ── -->
-      <article class="card-animate bg-cinza-card rounded-2xl border border-cinza-borda p-6
-                      shadow-card hover:shadow-card-hover hover:-translate-y-1
-                      transition-all duration-300 flex flex-col gap-4">
-        <div class="flex items-start justify-between">
-          <div class="w-11 h-11 bg-verde-acao/10 rounded-xl flex items-center justify-center">
-            <!-- Ícone Mapa / Estratégia -->
-            <svg class="w-5 h-5 text-verde-acao" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6
-                   3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
-            </svg>
-          </div>
-          <span class="tag bg-verde-acao/10 text-verde-acao">Mapa Mental</span>
-        </div>
-        <div class="flex-1">
-          <h2 class="text-grafite font-semibold text-base leading-snug mb-1">
-            Mapa: Planejamento Estratégico de RH
-          </h2>
-          <p class="text-grafite-light text-sm leading-relaxed">
-            Da análise de headcount ao plano de desenvolvimento — tudo em um mapa visual e executável.
-          </p>
-        </div>
-        <a href="COLE_AQUI_O_LINK_DO_ARQUIVO_6"
-           target="_blank" rel="noopener noreferrer"
-           class="w-full bg-verde-acao hover:bg-verde-hover text-white text-sm font-semibold
-                  py-2.5 rounded-xl text-center transition-colors duration-200 flex items-center justify-center gap-2">
-          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
-          </svg>
-          Baixar Agora
-        </a>
-      </article>
+      <!-- ── CARD 6 ── MAPA PLANEJAMENTO ESTRATÉGICO DE RH-->
+      <article style="
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #E2E5EA;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 2px 12px rgba(31,78,121,0.07);
+  transition: box-shadow .3s, transform .3s;
+"
+onmouseover="this.style.boxShadow='0 8px 28px rgba(31,78,121,0.16)';this.style.transform='translateY(-4px)'"
+onmouseout="this.style.boxShadow='0 2px 12px rgba(31,78,121,0.07)';this.style.transform='translateY(0)'">
+
+  <!-- Topo do card: ícone + tag -->
+  <div style="display:flex;align-items:flex-start;justify-content:space-between">
+    <div style="width:44px;height:44px;background:rgba(31,78,121,0.1);border-radius:12px;
+                display:flex;align-items:center;justify-content:center">
+      <svg style="width:20px;height:20px;color:#1F4E79" fill="none" viewBox="0 0 24 24"
+           stroke="#1F4E79" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0
+             012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012
+             2m0 10V7"/>
+      </svg>
+    </div>
+    <span style="font-size:0.65rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;
+                 padding:2px 10px;border-radius:9999px;background:rgba(31,78,121,0.1);
+                 color:#1F4E79">
+      Mapa Mental
+    </span>
+  </div>
+
+  <!-- Texto -->
+  <div style="flex:1">
+    <h2 style="font-size:1rem;font-weight:600;color:#333333;line-height:1.4;margin-bottom:6px">
+      Mapa: Planejamento Estratégico RH
+    </h2>
+    <p style="font-size:0.875rem;color:#6B7280;line-height:1.6">
+      Veja como conectar headcount, desenvolvimento, clima e performance ao planejamento estratégico da empresa.
+    </p>
+  </div>
+
+  <!-- BOTÃO DE DOWNLOAD — clicável e visível -->
+  <a href="mapa-planejamneto-rh.html"
+     style="
+       display: flex;
+       align-items: center;
+       justify-content: center;
+       gap: 8px;
+       width: 100%;
+       background: #3DA57A;
+       color: #ffffff;
+       font-size: 0.875rem;
+       font-weight: 700;
+       padding: 12px 20px;
+       border-radius: 12px;
+       text-decoration: none;
+       transition: background .2s;
+       cursor: pointer;
+     "
+     onmouseover="this.style.background='#2E8A63'"
+     onmouseout="this.style.background='#3DA57A'">
+    <svg style="width:16px;height:16px" fill="none" viewBox="0 0 24 24"
+         stroke="#ffffff" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round"
+        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+    </svg>
+    Visualizar Agora
+  </a>
+
+</article>
+
 
 
     </div><!-- /grid -->
