@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard de KPIs de RH | Felipe Barroso</title>
-  <meta name="description" content="Baixe gratuitamente o Dashboard de KPIs de RH e monitore os principais indicadores de pessoas com foco em resultado e EBITDA." />
+  <title>Guia de Onboarding Estratégico | Felipe Barroso</title>
+  <meta name="description" content="Baixe gratuitamente o Guia de Onboarding Estratégico e estruture a integração de novos colaboradores para reduzir ramp-up e aumentar a retenção." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 
@@ -33,115 +33,172 @@
   </script>
 
   <style>
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{
-      font-family:'Inter',sans-serif;
+    *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+    body {
+      font-family: 'Inter', sans-serif;
       background: linear-gradient(180deg, #F4F5F7 0%, #1F4E79 70%, #10243F 100%);
-      color:#333;
-      -webkit-font-smoothing:antialiased;
-      min-height:100vh;
+      color: #333;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
     }
-    html{scroll-behavior:smooth}
+    html { scroll-behavior: smooth; }
 
-    .fi{
-      width:100%;
-      background:#F8F9FB;
-      border:1.5px solid #E2E5EA;
-      border-radius:10px;
-      padding:12px 14px;
-      font-size:.875rem;
-      color:#333;
-      font-family:'Inter',sans-serif;
-      transition:border-color .2s,box-shadow .2s,background .2s;
-      outline:none;
-      appearance:none;
+    /* ── Inputs ── */
+    .fi {
+      width: 100%;
+      background: #F8F9FB;
+      border: 1.5px solid #E2E5EA;
+      border-radius: 10px;
+      padding: 12px 14px;
+      font-size: .875rem;
+      color: #333;
+      font-family: 'Inter', sans-serif;
+      transition: border-color .2s, box-shadow .2s, background .2s;
+      outline: none;
+      appearance: none;
     }
-    .fi:focus{
-      border-color:#1F4E79;
-      background:#fff;
-      box-shadow:0 0 0 3px rgba(31,78,121,.12);
+    .fi:focus {
+      border-color: #1F4E79;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(31,78,121,.12);
     }
-    .fi.err{border-color:#DC2626;background:#FEF2F2}
-    .fi::placeholder{color:#9CA3AF}
-    select.fi{
-      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
-      background-repeat:no-repeat;
-      background-position:right 12px center;
-      background-size:16px;
-      padding-right:40px;
-      cursor:pointer;
-    }
-
-    .emsg{display:none;font-size:.73rem;color:#DC2626;margin-top:4px;align-items:center;gap:4px}
-    .emsg.show{display:flex}
-    .req::after{content:' *';color:#DC2626}
-
-    @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-    .fade-up{animation:fadeUp .5s ease-out forwards}
-
-    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-    @keyframes pulseGlow{0%,100%{box-shadow:0 0 0 0 rgba(61,165,122,.45)}50%{box-shadow:0 0 0 12px rgba(61,165,122,0)}}
-    .btn-pulse{animation:pulseGlow 2.5s infinite}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    .spinner{animation:spin .8s linear infinite}
-    @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-    .bounce{animation:bounce 2.2s ease-in-out infinite}
-
-    .kpi-card{
-      background:#fff;
-      border:1px solid #E2E5EA;
-      border-radius:10px;
-      padding:12px 16px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      transition:transform .2s,box-shadow .2s;
-    }
-    .kpi-card:hover{
-      transform:translateY(-2px);
-      box-shadow:0 4px 16px rgba(31,78,121,.10);
-    }
-    .kpi-icon{
-      width:36px;height:36px;border-radius:8px;
-      display:flex;align-items:center;justify-content:center;flex-shrink:0;
+    .fi.err { border-color: #DC2626; background: #FEF2F2; }
+    .fi::placeholder { color: #9CA3AF; }
+    select.fi {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236B7280' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 16px;
+      padding-right: 40px;
+      cursor: pointer;
     }
 
-    .proof-bar{height:6px;background:#E2E5EA;border-radius:3px;overflow:hidden}
-    .proof-fill{height:100%;background:linear-gradient(90deg,#1F4E79,#3DA57A);border-radius:3px;transition:width 1.8s ease;width:0%}
+    /* ── Erros ── */
+    .emsg {
+      display: none;
+      font-size: .73rem;
+      color: #DC2626;
+      margin-top: 4px;
+      align-items: center;
+      gap: 4px;
+    }
+    .emsg.show { display: flex; }
+    .req::after { content: ' *'; color: #DC2626; }
 
-    .benefit-pill{
-      display:inline-flex;align-items:center;gap:6px;
-      background:rgba(255,255,255,.12);
-      border:1px solid rgba(255,255,255,.2);
-      border-radius:8px;
-      padding:6px 12px;
-      font-size:.78rem;
-      color:rgba(255,255,255,.9);
+    /* ── Animações ── */
+    @keyframes fadeUp {
+      from { opacity:0; transform:translateY(20px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .fade-up { animation: fadeUp .5s ease-out forwards; }
+
+    @keyframes fadeIn {
+      from { opacity:0; }
+      to   { opacity:1; }
     }
 
-    #modal-success{
-      display:none;position:fixed;inset:0;
-      background:rgba(0,0,0,.55);z-index:100;
-      align-items:center;justify-content:center;
-      padding:20px;animation:fadeIn .3s ease-out;
+    @keyframes pulseGlow {
+      0%,100% { box-shadow: 0 0 0 0 rgba(61,165,122,.45); }
+      50%      { box-shadow: 0 0 0 12px rgba(61,165,122,0); }
     }
-    #modal-success.show{display:flex}
+    .btn-pulse { animation: pulseGlow 2.5s infinite; }
 
-    .check-item{
-      display:flex;align-items:flex-start;gap:10px;
-      padding:10px 0;border-bottom:1px solid #F4F5F7;
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spinner { animation: spin .8s linear infinite; }
+
+    @keyframes bounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-5px); }
     }
-    .check-item:last-child{border-bottom:none}
+    .bounce { animation: bounce 2.2s ease-in-out infinite; }
+
+    /* ── Barra de avaliação ── */
+    .proof-bar {
+      height: 6px;
+      background: #E2E5EA;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .proof-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #1F4E79, #3DA57A);
+      border-radius: 3px;
+      transition: width 1.8s ease;
+      width: 0%;
+    }
+
+    /* ── Pill de benefício ── */
+    .benefit-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: .78rem;
+      color: rgba(255,255,255,.9);
+    }
+
+    /* ── Modal de sucesso ── */
+    #modal-success {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      animation: fadeIn .3s ease-out;
+    }
+    #modal-success.show { display: flex; }
+
+    /* ── Check item ── */
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 1px solid #F4F5F7;
+    }
+    .check-item:last-child { border-bottom: none; }
+
+    /* ── Timeline de onboarding ── */
+    .timeline-item {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+    }
+    .timeline-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      color: #fff;
+    }
+    .timeline-line {
+      width: 2px;
+      height: 24px;
+      background: linear-gradient(180deg, #1F4E79, #E2E5EA);
+      margin-left: 15px;
+    }
   </style>
 </head>
 
 <body class="flex flex-col min-h-screen">
 
-  <!-- HEADER -->
+  <!-- ══════════ HEADER ══════════ -->
   <header class="bg-white border-b border-borda sticky top-0 z-50">
     <div class="max-w-5xl mx-auto px-5 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-full bg-azul flex items-center justify-center flex-shrink-0">
+        <div class="w-8 h-8 rounded-full bg-azul flex items-center
+                    justify-center flex-shrink-0">
           <span class="text-white text-xs font-bold">FB</span>
         </div>
         <div>
@@ -149,44 +206,52 @@
           <p class="text-cinza text-xs">Consultor | RH Estratégico</p>
         </div>
       </div>
-      <div class="hidden sm:flex items-center gap-2 bg-verde-lt border border-verde/20 rounded-full px-4 py-1.5">
+      <div class="hidden sm:flex items-center gap-2 bg-verde-lt border
+                  border-verde/20 rounded-full px-4 py-1.5">
         <div class="w-2 h-2 rounded-full bg-verde animate-pulse"></div>
         <span class="text-verde text-xs font-semibold">
-          +1.800 gestores já utilizam
+          +2.100 profissionais já baixaram
         </span>
       </div>
     </div>
   </header>
 
-  <!-- MAIN -->
+  <!-- ══════════ MAIN ══════════ -->
   <main class="flex-1 max-w-5xl mx-auto w-full px-5 py-10">
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
-      <!-- COLUNA ESQUERDA -->
+      <!-- ════════ COLUNA ESQUERDA ════════ -->
       <div class="fade-up">
 
-        <div class="inline-flex items-center gap-2 bg-azul/10 text-azul text-xs font-bold tracking-widest uppercase px-4 py-1.5 rounded-full mb-5">
-          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0
-                 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0
-                 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0
-                 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0
-                 01-2 2h-2a2 2 0 01-2-2z"/>
+        <!-- Badge -->
+        <div class="inline-flex items-center gap-2 bg-terra/10 text-terra
+                    text-xs font-bold tracking-widest uppercase
+                    px-4 py-1.5 rounded-full mb-5">
+          <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586
+                     a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2
+                     0 01-2 2z"/>
           </svg>
-          Planilha · Dashboard
+          PDF Gratuito
         </div>
 
+        <!-- Título -->
         <h1 class="text-azul text-2xl sm:text-3xl font-bold leading-tight mb-3">
-          Dashboard de KPIs de RH
+          Guia de Onboarding Estratégico
         </h1>
 
-        <div style="width:48px;height:4px;background:linear-gradient(90deg,#D97A4A,#F0A07A);border-radius:2px;margin-bottom:20px"></div>
+        <!-- Linha decorativa -->
+        <div style="width:48px;height:4px;
+                    background:linear-gradient(90deg,#D97A4A,#F0A07A);
+                    border-radius:2px;margin-bottom:20px"></div>
 
+        <!-- Subtítulo -->
         <p class="text-white text-base leading-relaxed mb-8">
-          Monitore os principais indicadores de pessoas em um único painel —
-          pronto para apresentar ao <strong class="text-grafite/60">board executivo</strong>
-          e conectar o RH diretamente ao <strong class="text-grafite/60">resultado do negócio</strong>.
+          Estruture a integração de novos colaboradores de forma
+          <strong style="color:#FED7AA;">estratégica e mensurável</strong> —
+          reduzindo o ramp-up, aumentando a retenção e transformando os
+          primeiros 90 dias em
+          <strong style="color:#FED7AA;">vantagem competitiva</strong>.
         </p>
 
         <!-- O que você vai encontrar -->
@@ -196,25 +261,25 @@
             <svg class="w-4 h-4 text-verde" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round"
-                d="M9 17v2m6-2v2M9 7v2m6-2v2M9 13v2m6-2v2M5
-                   7h14M5 11h14M5 15h14"/>
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0
+                   002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0
+                   002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
             </svg>
-            O que você encontra neste dashboard:
+            O que você vai encontrar neste guia:
           </p>
 
           <div class="check-item">
             <svg class="w-5 h-5 text-verde flex-shrink-0 mt-0.5" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M5 13l4 4L19 7"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
             </svg>
             <div>
               <p class="text-grafite text-sm font-medium">
-                KPIs essenciais de RH prontos
+                Framework dos primeiros 90 dias
               </p>
               <p class="text-cinza text-xs leading-relaxed">
-                Turnover, absenteísmo, headcount, tempo de preenchimento,
-                custo de contratação, NPS interno e mais.
+                Semana a semana: o que o colaborador deve aprender, entregar
+                e sentir em cada etapa da integração.
               </p>
             </div>
           </div>
@@ -222,16 +287,15 @@
           <div class="check-item">
             <svg class="w-5 h-5 text-verde flex-shrink-0 mt-0.5" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M5 13l4 4L19 7"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
             </svg>
             <div>
               <p class="text-grafite text-sm font-medium">
-                Visual para diretoria
+                Como reduzir o tempo de ramp-up
               </p>
               <p class="text-cinza text-xs leading-relaxed">
-                Gráficos e indicadores com linguagem executiva:
-                fácil de entender em reunião de resultados.
+                Técnicas para acelerar a produtividade real do novo colaborador
+                sem sobrecarregar o time existente.
               </p>
             </div>
           </div>
@@ -239,16 +303,15 @@
           <div class="check-item">
             <svg class="w-5 h-5 text-verde flex-shrink-0 mt-0.5" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M5 13l4 4L19 7"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
             </svg>
             <div>
               <p class="text-grafite text-sm font-medium">
-                Fórmulas e segmentações prontas
+                Checklist de onboarding por área
               </p>
               <p class="text-cinza text-xs leading-relaxed">
-                Basta alimentar os dados brutos para o dashboard atualizar
-                automaticamente por área, unidade e período.
+                Listas prontas para RH, TI, Financeiro, Comercial e Operações —
+                adaptáveis ao seu contexto.
               </p>
             </div>
           </div>
@@ -256,79 +319,83 @@
           <div class="check-item">
             <svg class="w-5 h-5 text-verde flex-shrink-0 mt-0.5" fill="none"
                  viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M5 13l4 4L19 7"/>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
             </svg>
             <div>
               <p class="text-grafite text-sm font-medium">
-                Foco em ROI e EBITDA
+                Como medir o ROI do onboarding
               </p>
               <p class="text-cinza text-xs leading-relaxed">
-                Estrutura pensada para apresentar o impacto de pessoas
-                em custo, receita e margem operacional.
+                Métricas e fórmulas para provar à diretoria que um onboarding
+                bem feito reduz custo e aumenta retenção.
+              </p>
+            </div>
+          </div>
+
+          <div class="check-item">
+            <svg class="w-5 h-5 text-verde flex-shrink-0 mt-0.5" fill="none"
+                 viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+            </svg>
+            <div>
+              <p class="text-grafite text-sm font-medium">
+                Cultura e pertencimento desde o dia 1
+              </p>
+              <p class="text-cinza text-xs leading-relaxed">
+                Como conectar o novo colaborador aos valores da empresa antes
+                mesmo da primeira semana terminar.
               </p>
             </div>
           </div>
         </div>
 
-        <!-- Prévia de KPIs (cards) -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
-          <div class="kpi-card">
-            <div class="kpi-icon" style="background:#EBF3FB">
-              <svg class="w-4 h-4 text-azul" fill="none" viewBox="0 0 24 24"
-                   stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M9 13h6m2.879-4.121
-                     A3 3 0 0115 9h-3a3 3 0 01-2.879-4.121 3 3 0
-                     015.758 0A3 3 0 0118 9z"/>
-              </svg>
-            </div>
+        <!-- Timeline visual -->
+        <div class="bg-white rounded-2xl border border-borda p-6 mb-6"
+             style="box-shadow:0 2px 12px rgba(31,78,121,.07)">
+          <p class="text-grafite font-semibold text-sm mb-5">
+            Os primeiros 90 dias — visão geral:
+          </p>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#1F4E79">D1</div>
             <div>
-              <p class="text-grafite text-xs font-semibold">Turnover</p>
-              <p class="text-cinza text-[11px]">Por área e tipo de desligamento</p>
+              <p class="text-grafite text-sm font-semibold">Dia 1 — Boas-vindas & Cultura</p>
+              <p class="text-cinza text-xs leading-relaxed">
+                Imersão nos valores, apresentação do time e setup completo.
+              </p>
             </div>
           </div>
+          <div class="timeline-line"></div>
 
-          <div class="kpi-card">
-            <div class="kpi-icon" style="background:#E8F7F1">
-              <svg class="w-4 h-4 text-verde" fill="none" viewBox="0 0 24 24"
-                   stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M11 11V3L7 7M13 13h5l-1.5 1.5A5 5 0 1111 19.9"/>
-              </svg>
-            </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#2E6FA8">30</div>
             <div>
-              <p class="text-grafite text-xs font-semibold">Absenteísmo</p>
-              <p class="text-cinza text-[11px]">Impacto em horas e custo</p>
+              <p class="text-grafite text-sm font-semibold">30 dias — Aprendizado ativo</p>
+              <p class="text-cinza text-xs leading-relaxed">
+                Primeiras entregas, alinhamento de expectativas e feedback estruturado.
+              </p>
             </div>
           </div>
+          <div class="timeline-line"></div>
 
-          <div class="kpi-card">
-            <div class="kpi-icon" style="background:#FFF7ED">
-              <svg class="w-4 h-4 text-terra" fill="none" viewBox="0 0 24 24"
-                   stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M13 10V3L4 14h7v7l9-11h-7z"/>
-              </svg>
-            </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#D97A4A">60</div>
             <div>
-              <p class="text-grafite text-xs font-semibold">Tempo de preenchimento</p>
-              <p class="text-cinza text-[11px]">Time-to-fill por vaga</p>
+              <p class="text-grafite text-sm font-semibold">60 dias — Autonomia progressiva</p>
+              <p class="text-cinza text-xs leading-relaxed">
+                Projetos próprios, integração completa ao time e avaliação de fit.
+              </p>
             </div>
           </div>
+          <div class="timeline-line"></div>
 
-          <div class="kpi-card">
-            <div class="kpi-icon" style="background:#EEF2FF">
-              <svg class="w-4 h-4 text-azul-md" fill="none" viewBox="0 0 24 24"
-                   stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9 8h6m-6 4h4m7 5V5a2 2 0 00-2-2H6a2 2 0
-                     00-2 2v12a2 2 0 002 2h12a2 2 0 002-2z"/>
-              </svg>
-            </div>
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#3DA57A">90</div>
             <div>
-              <p class="text-grafite text-xs font-semibold">Headcount & custo</p>
-              <p class="text-cinza text-[11px]">Estrutura x orçamento</p>
+              <p class="text-grafite text-sm font-semibold">90 dias — Performance & Pertencimento</p>
+              <p class="text-cinza text-xs leading-relaxed">
+                Avaliação final de onboarding, PDI inicial e confirmação de retenção.
+              </p>
             </div>
           </div>
         </div>
@@ -336,17 +403,20 @@
         <!-- Prova social -->
         <div class="bg-azul-lt rounded-2xl p-5 mb-6">
           <div class="flex items-center justify-between mb-2">
-            <p class="text-azul text-xs font-semibold">Avaliação dos usuários</p>
-            <p class="text-azul text-sm font-bold">4.8 / 5.0</p>
+            <p class="text-azul text-xs font-semibold">Avaliação dos leitores</p>
+            <p class="text-azul text-sm font-bold">4.9 / 5.0</p>
           </div>
-          <div class="proof-bar mb-3"><div class="proof-fill" id="rating-bar"></div></div>
+          <div class="proof-bar mb-3">
+            <div class="proof-fill" id="rating-bar"></div>
+          </div>
           <blockquote class="border-l-2 border-azul/30 pl-4">
             <p class="text-cinza text-xs leading-relaxed italic">
-              "Coloquei esse dashboard na reunião mensal com a diretoria e, pela
-              primeira vez, o RH entrou na pauta de resultados, não só de custo."
+              "Aplicamos o framework dos 90 dias e a taxa de desligamento
+              nos primeiros 6 meses caiu 38%. O onboarding virou prioridade
+              estratégica aqui na empresa."
             </p>
             <footer class="text-azul text-xs font-semibold mt-1.5">
-              — Juliana P., Gerente de RH · Serviços · Curitiba/PR
+              — Mariana T., Gerente de RH · Varejo · São Paulo/SP
             </footer>
           </blockquote>
         </div>
@@ -369,12 +439,13 @@
 
       </div>
 
-      <!-- COLUNA DIREITA — FORM -->
+      <!-- ════════ COLUNA DIREITA — FORMULÁRIO ════════ -->
       <div class="lg:sticky lg:top-24">
 
         <div class="bg-white rounded-2xl border border-borda overflow-hidden"
              style="box-shadow:0 6px 32px rgba(31,78,121,.14)">
 
+          <!-- Cabeçalho do card -->
           <div class="bg-azul px-7 py-6">
             <div class="flex items-start justify-between gap-3 mb-4">
               <div>
@@ -382,10 +453,10 @@
                   Acesso 100% Gratuito
                 </p>
                 <h2 class="text-white text-xl font-bold leading-snug">
-                  Preencha e baixe o dashboard
+                  Preencha e baixe o guia
                 </h2>
                 <p class="text-white/70 text-xs mt-1">
-                  Arquivo em Excel · Pronto para usar ou adaptar ao seu contexto.
+                  Download imediato · Sem cartão · Sem spam
                 </p>
               </div>
               <div class="bounce flex-shrink-0">
@@ -394,11 +465,9 @@
                   <svg class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24"
                        stroke="currentColor" stroke-width="1.8">
                     <path stroke-linecap="round" stroke-linejoin="round"
-                      d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0
-                         01-2-2V7a2 2 0 012-2h2a2 2 0
-                         012 2m0 10a2 2 0 002 2h2a2 2 0
-                         002-2M9 7a2 2 0 012-2h2a2 2 0
-                         012 2m0 10V7"/>
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0
+                         012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1
+                         0 01.293.707V19a2 2 0 01-2 2z"/>
                   </svg>
                 </div>
               </div>
@@ -424,18 +493,21 @@
                      stroke="currentColor" stroke-width="3">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
                 </svg>
-                Formato Excel
+                Formato PDF
               </div>
             </div>
           </div>
 
+          <!-- Formulário -->
           <div class="px-7 py-6">
             <form id="lead-form" novalidate>
+
               <div class="mb-4">
                 <label class="block text-grafite font-medium text-sm mb-1.5 req">
                   Nome completo
                 </label>
-                <input type="text" id="nome" class="fi" placeholder="Ex: Ana Pereira"
+                <input type="text" id="nome" class="fi"
+                       placeholder="Ex: Marcos Oliveira"
                        maxlength="80" autocomplete="name"/>
                 <div class="emsg" id="e-nome">⚠ Informe seu nome completo.</div>
               </div>
@@ -444,7 +516,8 @@
                 <label class="block text-grafite font-medium text-sm mb-1.5 req">
                   E-mail profissional
                 </label>
-                <input type="email" id="email" class="fi" placeholder="voce@empresa.com"
+                <input type="email" id="email" class="fi"
+                       placeholder="voce@empresa.com"
                        autocomplete="email"/>
                 <div class="emsg" id="e-email">⚠ Informe um e-mail válido.</div>
               </div>
@@ -453,7 +526,8 @@
                 <label class="block text-grafite font-medium text-sm mb-1.5 req">
                   WhatsApp
                 </label>
-                <input type="tel" id="whats" class="fi" placeholder="(11) 99999-9999"
+                <input type="tel" id="whats" class="fi"
+                       placeholder="(11) 99999-9999"
                        maxlength="16" autocomplete="tel"/>
                 <div class="emsg" id="e-whats">⚠ Informe um WhatsApp válido.</div>
               </div>
@@ -497,34 +571,38 @@
                             flex items-center justify-center flex-shrink-0
                             cursor-pointer transition-all duration-200">
                   <svg id="ccheck" class="w-2.5 h-2.5 text-white hidden"
-                       fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                       stroke-width="3">
+                       fill="none" viewBox="0 0 24 24"
+                       stroke="currentColor" stroke-width="3">
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M5 13l4 4L19 7"/>
                   </svg>
                 </div>
                 <span class="text-xs text-cinza leading-relaxed cursor-pointer"
                       onclick="toggleConsent()">
-                  Concordo em receber conteúdos de KPIs e RH Estratégico.
-                  Dados protegidos conforme a <strong class="text-grafite">LGPD</strong>.
+                  Concordo em receber conteúdos sobre Onboarding e RH Estratégico.
+                  Dados protegidos conforme a
+                  <strong class="text-grafite">LGPD</strong>.
                   Cancele quando quiser.
                 </span>
               </div>
-              <div class="emsg mb-4" id="e-consent">⚠ É necessário aceitar para continuar.</div>
+              <div class="emsg mb-4" id="e-consent">
+                ⚠ É necessário aceitar para continuar.
+              </div>
 
               <button type="button" id="btn-download"
                       onclick="submitLead()"
-                      class="btn-pulse w-full bg-verde hover:bg-verde-hv text-white
-                             font-bold text-base py-4 rounded-xl transition-all
-                             duration-200 flex items-center justify-center gap-3
-                             hover:-translate-y-0.5 hover:shadow-xl">
+                      class="btn-pulse w-full bg-verde hover:bg-verde-hv
+                             text-white font-bold text-base py-4 rounded-xl
+                             transition-all duration-200 flex items-center
+                             justify-center gap-3 hover:-translate-y-0.5
+                             hover:shadow-xl">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                      stroke="currentColor" stroke-width="2">
                   <path stroke-linecap="round" stroke-linejoin="round"
                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4
                        4m0 0l-4-4m4 4V4"/>
                 </svg>
-                Quero Baixar o Dashboard Agora
+                Quero Baixar o Guia Agora
               </button>
 
               <p class="text-center text-cinza text-xs mt-3
@@ -546,9 +624,34 @@
         <div class="mt-4 bg-white rounded-xl border border-borda p-4"
              style="box-shadow:0 2px 12px rgba(31,78,121,.07)">
           <p class="text-cinza text-xs font-semibold mb-3">Você também pode gostar:</p>
-          <a href="download-guia-rh.html"
+
+          <a href="download-dashboard-kpis.html"
              class="flex items-center gap-3 p-2 rounded-lg hover:bg-fundo
                     transition-colors duration-200 group">
+            <div class="w-8 h-8 bg-azul-lt rounded-lg flex items-center
+                        justify-center flex-shrink-0">
+              <svg class="w-4 h-4 text-azul" fill="none" viewBox="0 0 24 24"
+                   stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0
+                     012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0
+                     002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <p class="text-grafite text-xs font-medium group-hover:text-azul
+                        transition-colors">Dashboard de KPIs de RH</p>
+              <p class="text-cinza text-xs">Planilha gratuita</p>
+            </div>
+            <svg class="w-4 h-4 text-cinza group-hover:text-azul transition-colors"
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
+            </svg>
+          </a>
+
+          <a href="download-guia-rh.html"
+             class="flex items-center gap-3 p-2 rounded-lg hover:bg-fundo
+                    transition-colors duration-200 group mt-1">
             <div class="w-8 h-8 bg-terra/10 rounded-lg flex items-center
                         justify-center flex-shrink-0">
               <svg class="w-4 h-4 text-terra" fill="none" viewBox="0 0 24 24"
@@ -565,37 +668,8 @@
               <p class="text-cinza text-xs">PDF gratuito</p>
             </div>
             <svg class="w-4 h-4 text-cinza group-hover:text-terra transition-colors"
-                 fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                 stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M9 5l7 7-7 7"/>
-            </svg>
-          </a>
-
-          <a href="diagnostico.html"
-             class="flex items-center gap-3 p-2 rounded-lg hover:bg-fundo
-                    transition-colors duration-200 group mt-1">
-            <div class="w-8 h-8 bg-azul-lt rounded-lg flex items-center
-                        justify-center flex-shrink-0">
-              <svg class="w-4 h-4 text-azul" fill="none" viewBox="0 0 24 24"
-                   stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0
-                     002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002
-                     2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0
-                     012 2m-6 9l2 2 4-4"/>
-              </svg>
-            </div>
-            <div class="flex-1">
-              <p class="text-grafite text-xs font-medium group-hover:text-azul
-                        transition-colors">Diagnóstico Gratuito de RH</p>
-              <p class="text-cinza text-xs">Plano de ação em 48h</p>
-            </div>
-            <svg class="w-4 h-4 text-cinza group-hover:text-azul transition-colors"
-                 fill="none" viewBox="0 0 24 24" stroke="currentColor"
-                 stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M9 5l7 7-7 7"/>
+                 fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
             </svg>
           </a>
         </div>
@@ -604,7 +678,7 @@
     </div>
   </main>
 
-  <!-- MODAL SUCESSO -->
+  <!-- ══════════ MODAL DE SUCESSO ══════════ -->
   <div id="modal-success">
     <div class="bg-white rounded-2xl max-w-md w-full p-8 text-center"
          style="box-shadow:0 8px 40px rgba(0,0,0,.2)">
@@ -622,13 +696,13 @@
         Pronto, <span id="suc-nome"></span>!
       </h3>
       <p class="text-cinza text-sm leading-relaxed mb-6">
-        Seu dashboard está liberado. Também enviamos o link para
+        Seu guia está liberado. Também enviamos o link para
         <strong id="suc-email" class="text-grafite"></strong>.
       </p>
 
       <a id="btn-real-download"
-         href="Dashboard-de-KPIs-de-RH.xlsx"
-         download="Dashboard-de-KPIs-de-RH.xlsx"
+         href="Guia-Onboarding-Estrategico.pdf"
+         download="Guia-Onboarding-Estrategico.pdf"
          class="flex items-center justify-center gap-3 w-full bg-verde
                 hover:bg-verde-hv text-white font-bold text-base py-4
                 rounded-xl transition-all duration-200 mb-4 hover:shadow-lg">
@@ -638,7 +712,7 @@
             d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4
                4m0 0l-4-4m4 4V4"/>
         </svg>
-        Baixar o Dashboard Agora
+        Baixar o Guia Agora
       </a>
 
       <div class="flex gap-3">
@@ -656,23 +730,26 @@
       </div>
 
       <p class="text-cinza text-xs mt-4">
-        Esta janela fecha em <span id="close-sec" class="font-bold">10</span>s
+        Esta janela fecha em
+        <span id="close-sec" class="font-bold">10</span>s
       </p>
     </div>
   </div>
 
-  <!-- FOOTER -->
+  <!-- ══════════ FOOTER ══════════ -->
   <footer class="border-t border-borda bg-white mt-auto">
     <div class="max-w-5xl mx-auto px-5 py-6 flex flex-col sm:flex-row
                 items-center justify-between gap-4">
       <p class="text-cinza text-xs">
-        © 2026 Felipe Barroso · Todos os direitos reservados
+        © 2025 Felipe Barroso · Todos os direitos reservados
       </p>
       <div class="flex items-center gap-5">
-        <a href="index.html" class="text-cinza hover:text-azul text-xs transition-colors">
+        <a href="index.html"
+           class="text-cinza hover:text-azul text-xs transition-colors">
           Materiais
         </a>
-        <a href="diagnostico.html" class="text-cinza hover:text-azul text-xs transition-colors">
+        <a href="diagnostico.html"
+           class="text-cinza hover:text-azul text-xs transition-colors">
           Diagnóstico
         </a>
         <span class="text-cinza text-xs flex items-center gap-1">
@@ -687,6 +764,8 @@
       </div>
     </div>
   </footer>
+
+  <!-- ══════════ SCRIPT ══════════ -->
   <script>
     var consent = false;
 
@@ -753,7 +832,7 @@
 
     function validateForm() {
       clearErrs();
-      var ok   = true;
+      var ok    = true;
       var nome  = document.getElementById('nome');
       var email = document.getElementById('email');
       var whats = document.getElementById('whats');
@@ -804,7 +883,7 @@
         whatsapp:  document.getElementById('whats').value.trim(),
         cargo:     document.getElementById('cargo').value,
         porte:     document.getElementById('porte').value,
-        material:  'Dashboard de KPIs de RH',
+        material:  'Guia de Onboarding Estratégico',
         timestamp: new Date().toISOString(),
         origem:    document.referrer || 'direto'
       };
@@ -836,8 +915,8 @@
 
       setTimeout(function() {
         var link = document.createElement('a');
-        link.href     = 'Dashboard-de-KPIs-de-RH.xlsx';
-        link.download = 'Dashboard-de-KPIs-de-RH.xlsx';
+        link.href     = 'Guia-Onboarding-Estrategico.pdf';
+        link.download = 'Guia-Onboarding-Estrategico.pdf';
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -858,7 +937,7 @@
     function animateRatingBar() {
       setTimeout(function() {
         var bar = document.getElementById('rating-bar');
-        if (bar) bar.style.width = '96%';
+        if (bar) bar.style.width = '98%';
       }, 600);
     }
   </script>

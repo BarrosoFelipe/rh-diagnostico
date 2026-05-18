@@ -36,7 +36,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', sans-serif;
-      background: #F4F5F7;
+      background: linear-gradient(180deg, #F4F5F7 0%, #1F4E79 70%, #10243F 100%);
       color: #333;
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
@@ -229,12 +229,12 @@
                     border-radius:2px;margin-bottom:20px"></div>
 
         <!-- Subtítulo -->
-        <p class="text-cinza text-base leading-relaxed mb-8">
+        <p class="text-white text-base leading-relaxed mb-8">
           Aprenda a posicionar o RH como área
-          <strong class="text-grafite">geradora de resultado</strong>,
+          <strong class="text-grafite/60">geradora de resultado</strong>,
           apresente dados que a diretoria entende e mostre como
           cada real investido em pessoas impacta diretamente o
-          <strong class="text-grafite">EBITDA</strong> da empresa.
+          <strong class="text-grafite/60">EBITDA</strong> da empresa.
         </p>
 
         <!-- O que você vai encontrar -->
@@ -848,7 +848,7 @@
       } catch(e) {}
 
       // Envia para Formspree — substitua YOUR_FORM_ID
-      fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      fetch('https://script.google.com/macros/s/AKfycbxJoSYYeVV1DG-HCWQ_pdKeWJ1TfPeynBperk51nXouFKE1196ELMhuCmW9wiKRH2g-mw/exec', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

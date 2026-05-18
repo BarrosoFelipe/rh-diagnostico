@@ -36,7 +36,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Inter', sans-serif;
-      background: #F4F5F7;
+      background: linear-gradient(180deg, #F4F5F7 0%, #1F4E79 70%, #10243F 100%);
       color: #333;
       -webkit-font-smoothing: antialiased;
       min-height: 100vh;
@@ -190,7 +190,7 @@
         <div style="width:48px;height:4px;background:linear-gradient(90deg,#D97A4A,#F0A07A);
                     border-radius:2px;margin-bottom:20px"></div>
 
-        <p class="text-cinza text-sm sm:text-base leading-relaxed mb-6" id="page-desc">
+        <p class="text-white text-sm sm:text-base leading-relaxed mb-6" id="page-desc">
           Descubra em qual estágio de maturidade o RH da sua empresa se encontra
           e receba um roteiro claro de evolução — do operacional ao estratégico.
         </p>
@@ -737,7 +737,7 @@
       salvarLead(data);
 
       // ── Envia para Formspree (substitua YOUR_FORM_ID) ──
-      fetch('https://formspree.io/f/YOUR_FORM_ID', {
+      fetch('https://script.google.com/macros/s/AKfycbxJoSYYeVV1DG-HCWQ_pdKeWJ1TfPeynBperk51nXouFKE1196ELMhuCmW9wiKRH2g-mw/exec', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
         body: JSON.stringify(data)
