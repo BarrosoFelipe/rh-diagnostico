@@ -728,7 +728,7 @@ function liberarDownload(data) {
   document.getElementById('suc-nome').textContent  = data.nome.split(' ')[0];
   document.getElementById('suc-email').textContent = data.email;
 
-  document.getElementById('modal-success').classList.add('show');
+  document.getElementById('success-screen').classList.add('show');
 
   setTimeout(function() {
     var link = document.createElement('a');
@@ -746,7 +746,7 @@ function liberarDownload(data) {
     if (el) el.textContent = sec;
     if (sec <= 0) {
       clearInterval(timer);
-      document.getElementById('modal-success').classList.remove('show');
+      document.getElementById('success-screen').classList.remove('show');
     }
   }, 1000);
 }
