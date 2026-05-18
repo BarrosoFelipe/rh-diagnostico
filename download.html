@@ -738,13 +738,21 @@
 
       // ── Envia para Formspree (substitua YOUR_FORM_ID) ──
       fetch('https://script.google.com/macros/s/AKfycbxJoSYYeVV1DG-HCWQ_pdKeWJ1TfPeynBperk51nXouFKE1196ELMhuCmW9wiKRH2g-mw/exec', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      .then(function() { liberarDownload(data); })
-      .catch(function() { liberarDownload(data); });
-    }
+  method: 'POST',
+  headers: {
+    'Content-Type': 'text/plain'
+  },
+  body: JSON.stringify(data)
+})
+.then(function(response) { return response.json(); })
+.then(function(result) {
+  console.log('Lead salvo:', result);
+  liberarDownload(data);
+})
+.catch(function(err) {
+  console.log('Erro no envio:', err);
+  liberarDownload(data);
+});
 
     // ── Salva lead no localStorage (métricas locais) ──
     function salvarLead(data) {
